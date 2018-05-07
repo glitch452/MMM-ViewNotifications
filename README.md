@@ -50,8 +50,11 @@ To update the module to the latest version, use your terminal to:
 1. Navigate to your MMM-ViewNotifications folder.  If you are using the default installation directory, use the command:<br />`cd ~/MagicMirror/modules/MMM-ViewNotifications`
 2. Update the module by executing the following command:<br />`git pull`
 
-If you have changed the module on your own, the update will fail.  <br />To force an update (WARNING! your changes will be lost), reset the module using and retry the update with the following commands:<br />`git reset --hard
-git pull`
+If you have changed the module on your own, the update will fail.  <br />To force an update (WARNING! your changes will be lost), reset the module using and retry the update with the following commands:<br />
+```
+git reset --hard
+git pull
+```
 
 ## License
 
