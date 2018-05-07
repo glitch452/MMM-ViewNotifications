@@ -5,8 +5,8 @@ This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror
 This module is intended to assist with module development.  It displays a list of notifications that have been broadcast to all the modules.  
 
 ## Installation
-1. Navigate to your MagicMirror's modules folder.  If you are using the default installation directory, use the command: `cd ~/MagicMirror/modules`
-2. Execute the following git command: `git clone https://github.com/glitch452/MMM-ViewNotifications.git`
+1. Navigate to your MagicMirror's modules folder.  If you are using the default installation directory, use the command:<br />`cd ~/MagicMirror/modules`
+2. Execute the following git command:<br />`git clone https://github.com/glitch452/MMM-ViewNotifications.git`
 
 ## Using the module
 
