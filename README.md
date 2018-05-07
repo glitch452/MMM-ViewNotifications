@@ -4,10 +4,13 @@ This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror
 
 This module is intended to assist with module development.  It displays a list of notifications that have been broadcast to all the modules.  
 
+## Example
+![Screenshot of MMM-ViewNotifications](/images/sample.png?raw=true "Example screenshot")
+
 ## Installation
 To install the module, use your terminal to:
 1. Navigate to your MagicMirror's modules folder.  If you are using the default installation directory, use the command:<br />`cd ~/MagicMirror/modules`
-2. Execute the following git command:<br />`git clone https://github.com/glitch452/MMM-ViewNotifications.git`
+2. Copy the module to your computer by executing the following command:<br />`git clone https://github.com/glitch452/MMM-ViewNotifications.git`
 
 ## Using the module
 
@@ -27,9 +30,6 @@ var config = {
 }
 ```
 
-## Example
-![Screenshot of MMM-ViewNotifications](/images/sample.png?raw=true "Example screenshot")
-
 ## Configuration options
 
 | Option                 | Description
@@ -45,12 +45,13 @@ var config = {
 | `excludeNotifications` | *Optional* - A black list of modules, notifications of these types will not be displayed<br />**Type:** `array`<br />**Default:** `[]`
 | `format`               | *Optional* - The format to use for the notification item added to the list. <br />**Type:** `string`<br />**Default:** `'{time}: "{module}" sent "{notification}"'`<br />**Options:** <br /> - `{notification}`  The name of the notification<br /> - `{module}`  The name of the module that sent the notification<br /> - `{payloadList}`  A list of properties in the payload object<br /> - `{payloadData}`  A JSON string representing the payload data in the notification<br /> - `{date}`  The date that the notification was sent in the YYYY-MM-DD format<br /> - `{time}`  The date that the notification was sent in the HH:mm:ss format<br /> - `{date\|format}`  The date/time that the notification was sent, in the specified format, <br />using [moment.js](https://momentjs.com/docs/#/displaying/format/) for formatting rules.  Ex: {date\|HH:mm}
 
-## Updated
+## Updates
 To update the module to the latest version, use your terminal to:
 1. Navigate to your MMM-ViewNotifications folder.  If you are using the default installation directory, use the command:<br />`cd ~/MagicMirror/modules/MMM-ViewNotifications`
-2. Execute the following git command:<br />`git pull`
+2. Update the module by executing the following command:<br />`git pull`
 
-If you have changed the module on your own, the update will fail.  To update, reset the module using the command `git reset --hard`, then retry `git pull`
+If you have changed the module on your own, the update will fail.  <br />To force an update (WARNING! your changes will be lost), reset the module using and retry the update with the following commands:<br />`git reset --hard
+git pull`
 
 ## License
 
