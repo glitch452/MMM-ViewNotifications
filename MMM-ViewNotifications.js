@@ -33,7 +33,7 @@ Module.register("MMM-ViewNotifications", {
 		 * {date}			The date that the notification was sent in the YYYY-MM-DD format
 		 * {time}			The date that the notification was sent in the HH:mm:ss format
 		 * {date|format}	The date/time that the notification was sent, in the specified format, 
-		 * 					using https://momentjs.com/docs/#/displaying/format/ for formatting
+		 * 					using https://momentjs.com/docs/#/displaying/format/ for formatting. Ex: {date\|HH:mm}
 		 */
 	},
 
@@ -102,10 +102,11 @@ Module.register("MMM-ViewNotifications", {
 	
 	cleanupNotificationsList: function() {
 		var self = this;
+		if (self.notifications.length < 1) { return; }
 		var now = new Date();
 		var temp = [];
 		var notifications = self.notifications;
-		notifications.foreach(function(n) {
+		notifications.forEach(function(n) {
 			if (now < n.timeout) { temp.push(n); }
 		});
 		self.notifications = temp;
