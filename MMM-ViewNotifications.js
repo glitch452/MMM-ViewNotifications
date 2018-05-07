@@ -13,7 +13,7 @@ Module.register("MMM-ViewNotifications", {
 		timeout: 8, // How long (in seconds) the notification should stay on the screen, set to 0 to keep indefinitely
 		maximum: 8, // The maximum nunber of notificaitons to show, set to 0 for unlimited (New ones push out older ones)
 		defaultIcon: 'bullhorn', // The default icon to use for a module whos icon is not set in the icons list
-		icons: { // The default icons to use for notifications from some of the default modules
+		icons: { // The icons to use for notifications from specific modules
 			calendar: 'calendar-check-o',
 			clock: 'clock-o',
 			currentweather: 'thermometer',
