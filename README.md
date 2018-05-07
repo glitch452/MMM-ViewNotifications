@@ -4,6 +4,10 @@ This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror
 
 This module is intended to assist with module development.  It displays a list of notifications that have been broadcast to all the modules.  
 
+| Status | Version | Date | Maintained? |
+|------- |-------- |----- |------------ |
+| Working | `1.0.0` | 2018-05-07 | Yes |
+
 ## Example
 ![Screenshot of MMM-ViewNotifications](/images/sample.png?raw=true "Example screenshot")
 
