@@ -27,7 +27,7 @@ var config = {
 ```
 
 ## Screenshots
-![Screenshot of MMM-ViewNotifications](/images/MMM-ViewNotifications.png?raw=true "Example screenshot")
+![Screenshot of MMM-ViewNotifications](/images/sample.png?raw=true "Example screenshot")
 
 ## Configuration options
 
@@ -36,19 +36,19 @@ var config = {
 | `timeout`              | *Optional* - How long (in seconds) the notification should stay on the screen, set to 0 to keep indefinitely<br />**Type:** `number`<br />**Default:** `8`
 | `maximum`              | *Optional* - The maximum nunber of notificaitons to show, set to 0 for unlimited (New ones push out older ones)<br />**Type:** `number`<br />**Default:** `8`
 | `icons`                | *Optional* - The icons to use for notifications from specific modules<br />**Type:** `object`<br />**Default:** `{ calendar: 'calendar', clock: 'clock-o', currentweather: 'thermometer', weatherforecast: 'thermometer' }`
-| `defaultIcon`          | *Optional* - The default icon to use for a module whos icon is not set in the icons list<br />**type:** `string`<br />**Default:** 'bullhorn'
+| `defaultIcon`          | *Optional* - The default icon to use for a module whos icon is not set in the icons list<br />**type:** `string`<br />**Default:** `'bullhorn'`
 | `newestOnTop`          | *Optional* - If true, new notifications are added to the top of the list, if false, the bottom<br />**Type:** `boolean`<br />**Default:** `true`
-| `includeModules`       | *Optional* - A white list of modules, if not empty, only notifications from these modules will be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
-| `excludeModules`       | *Optional* - A black list of modules, notifications from these modules will not be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
-| `includeNotifications` | *Optional* - A white list of notifications, if not empty, only notifications of these types will be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
-| `excludeNotifications` | *Optional* - A black list of modules, notifications of these types will not be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
-| `format`               | *Optional* - The format to use for the notification item added to the list. <br />**Type:** `string`<br />**Default:** `'{time}: "{module}" sent "{notification}"'`<br />**Options:**<br />**Options:** <br />- `{notification}`  The name of the notification<br />- `{module}`  The name of the module that sent the notification<br />- `{payloadList}`  A list of properties in the payload object<br />- `{payloadData}`  A JSON string representing the payload data in the notification<br />- `{date}`  The date that the notification was sent in the YYYY-MM-DD format<br />- `{time}`  The date that the notification was sent in the HH:mm:ss format<br />- `{date\|format}`  The date/time that the notification was sent, in the specified format, <br />  using [moment.js](https://momentjs.com/docs/#/displaying/format/) for formatting rules.  Ex: {date\|HH:mm}
+| `includeModules`       | *Optional* - A white list of modules, if not empty, only notifications from these modules will be displayed<br />**Type:** `array`<br />**Default:** `[]`
+| `excludeModules`       | *Optional* - A black list of modules, notifications from these modules will not be displayed<br />**Type:** `array`<br />**Default:** `[]`
+| `includeNotifications` | *Optional* - A white list of notifications, if not empty, only notifications of these types will be displayed<br />**Type:** `array`<br />**Default:** `[]`
+| `excludeNotifications` | *Optional* - A black list of modules, notifications of these types will not be displayed<br />**Type:** `array`<br />**Default:** `[]`
+| `format`               | *Optional* - The format to use for the notification item added to the list. <br />**Type:** `string`<br />**Default:** `'{time}: "{module}" sent "{notification}"'`<br />**Options:** <br /> - `{notification}`  The name of the notification<br /> - `{module}`  The name of the module that sent the notification<br /> - `{payloadList}`  A list of properties in the payload object<br /> - `{payloadData}`  A JSON string representing the payload data in the notification<br /> - `{date}`  The date that the notification was sent in the YYYY-MM-DD format<br /> - `{time}`  The date that the notification was sent in the HH:mm:ss format<br /> - `{date\|format}`  The date/time that the notification was sent, in the specified format, <br />using [moment.js](https://momentjs.com/docs/#/displaying/format/) for formatting rules.  Ex: {date\|HH:mm}
 
 ## License
 
 ### The MIT License (MIT)
 
-Copyright © 2016 Joseph Bethge
+Copyright © 2016 David Dearden
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
