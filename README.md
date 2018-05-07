@@ -17,6 +17,7 @@ var config = {
         {
             module: 'MMM-ViewNotifications',
             position: "top_left",
+			header: "Notifications",
             config: {
                 // See below for configurable options
             }
