@@ -26,17 +26,40 @@ var config = {
 }
 ```
 
+## Screenshots
+![Screenshot of MMM-ViewNotifications](/images/MMM-ViewNotifications.png?raw=true "Example screenshot")
+
 ## Configuration options
 
 | Option                 | Description
 |----------------------- |--------------
-| `timeout`              | *Optional* (number) How long (in seconds) the notification should stay on the screen, set to 0 to keep indefinitely<br>Default: 8 
-| `maximum`              | *Optional*  (number) The maximum nunber of notificaitons to show, set to 0 for unlimited (New ones push out older ones)<br>Default: 8
-| `icons`                | *Optional* (object) The icons to use for notifications from specific modules<br />Default: { calendar: 'calendar', clock: 'clock-o', currentweather: 'thermometer', weatherforecast: 'thermometer' }
-| `defaultIcon`          | *Optional* (string) The default icon to use for a module whos icon is not set in the icons list<br>Default: 'bullhorn'
-| `newestOnTop`          | *Optional* (boolean) If true, new notifications are added to the top of the list, if false, the bottom<br>Default: true
-| `includeModules`       | *Optional* (array) A white list of modules, if not empty, only notifications from these modules will be displayed<br>Default: [ ]
-| `excludeModules`       | *Optional* (array) A black list of modules, notifications from these modules will not be displayed<br>Default: [ ]
-| `includeNotifications` | *Optional* (array) A white list of notifications, if not empty, only notifications of these types will be displayed<br>Default: [ ]
-| `excludeNotifications` | *Optional* (array) A black list of modules, notifications of these types will not be displayed<br>Default: [ ]
-| `format`               | *Optional* (string) The format to use for the notification item added to the list, Possible variables include:<br />{notification} 	The name of the notification<br />{module}			The name of the module that sent the notification<br />{payloadList}	A list of properties in the payload object<br />{payloadData}	A JSON string representing the payload data in the notification<br />{date}			The date that the notification was sent in the YYYY-MM-DD format<br />{time}			The date that the notification was sent in the HH:mm:ss format<br />{date\|format}	The date/time that the notification was sent, in the specified format, <br />			using [moment.js](https://momentjs.com/docs/#/displaying/format/) for formatting rules.  Ex: {date\|HH:mm}<br />Default: '{time}: "{module}" sent "{notification}"'
+| `timeout`              | *Optional* - How long (in seconds) the notification should stay on the screen, set to 0 to keep indefinitely<br />**Type:** `number`<br />**Default:** `8`
+| `maximum`              | *Optional* - The maximum nunber of notificaitons to show, set to 0 for unlimited (New ones push out older ones)<br />**Type:** `number`<br />**Default:** `8`
+| `icons`                | *Optional* - The icons to use for notifications from specific modules<br />**Type:** `object`<br />**Default:** `{ calendar: 'calendar', clock: 'clock-o', currentweather: 'thermometer', weatherforecast: 'thermometer' }`
+| `defaultIcon`          | *Optional* - The default icon to use for a module whos icon is not set in the icons list<br />**type:** `string`<br />**Default:** 'bullhorn'
+| `newestOnTop`          | *Optional* - If true, new notifications are added to the top of the list, if false, the bottom<br />**Type:** `boolean`<br />**Default:** `true`
+| `includeModules`       | *Optional* - A white list of modules, if not empty, only notifications from these modules will be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
+| `excludeModules`       | *Optional* - A black list of modules, notifications from these modules will not be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
+| `includeNotifications` | *Optional* - A white list of notifications, if not empty, only notifications of these types will be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
+| `excludeNotifications` | *Optional* - A black list of modules, notifications of these types will not be displayed<br />**Type:** `array`<br />**Default:** `[ ]`
+| `format`               | *Optional* - The format to use for the notification item added to the list. <br />**Type:** `string`<br />**Default:** `'{time}: "{module}" sent "{notification}"'`<br />**Options:**<br />**Options:** <br />- `{notification}`  The name of the notification<br />- `{module}`  The name of the module that sent the notification<br />- `{payloadList}`  A list of properties in the payload object<br />- `{payloadData}`  A JSON string representing the payload data in the notification<br />- `{date}`  The date that the notification was sent in the YYYY-MM-DD format<br />- `{time}`  The date that the notification was sent in the HH:mm:ss format<br />- `{date\|format}`  The date/time that the notification was sent, in the specified format, <br />  using [moment.js](https://momentjs.com/docs/#/displaying/format/) for formatting rules.  Ex: {date\|HH:mm}
+
+## License
+
+### The MIT License (MIT)
+
+Copyright © 2016 Joseph Bethge
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the “Software”), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+**The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.**
