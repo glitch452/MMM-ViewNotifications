@@ -1,0 +1,41 @@
+# https://git-scm.com/docs/gitignore
+# https://help.github.com/articles/ignoring-files
+# Example.gitignore files : https://github.com/github/gitignore
+
+# OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Dreamweaver
+error_log
+_notes/
+
+# Vim swap files
+*.swp
+
+# VScode
+.vs
+
+# Scratch folders
+**/scratch
+**/scratch/*
+
+# Logs
+logs
+
+# node files
+node_modules/
+dist/
+
+.nyc_output
+.eslintcache
