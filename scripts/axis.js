@@ -6,8 +6,7 @@
   } else {
     root.axis = factory();
   }
-}(this, function () {
-
+})(this, function () {
   'use strict';
 
   var axis = {};
@@ -18,7 +17,7 @@
     return Object.prototype.toString.call(this).slice(8, -1);
   }
 
-  for (var i = types.length; i--;) {
+  for (var i = types.length; i--; ) {
     axis['is' + types[i]] = (function (self) {
       return function (elem) {
         return type.call(elem) === self;
@@ -27,5 +26,4 @@
   }
 
   return axis;
-
-}));
+});
