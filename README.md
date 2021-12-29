@@ -6,7 +6,7 @@ This module is intended to assist with module development. It displays a list of
 
 | Status  | Version | Date       | Maintained? |
 | ------- | ------- | ---------- | ----------- |
-| Working | `1.0.0` | 2018-05-07 | Yes         |
+| Working | `1.0.1` | 2021-12-28 | Yes         |
 
 ## Dependencies
 
@@ -14,7 +14,7 @@ This module is intended to assist with module development. It displays a list of
 
 ## Example
 
-![Screenshot of MMM-ViewNotifications](/images/sample.png?raw=true "Example screenshot")
+![Screenshot of MMM-ViewNotifications](/images/sample.png?raw=true 'Example screenshot')
 
 ## Installation
 
@@ -74,6 +74,20 @@ If you have changed the module on your own, the update will fail. <br />To force
 git reset --hard
 git pull
 ```
+
+## Manually Choose a Version
+
+To use an older version of this module, use your terminal to:
+
+1. Navigate to your MMM-PlexNowPlaying folder. If you are using the default installation directory, use the command:<br>`cd ~/MagicMirror/modules/MMM-ViewNotifications`
+2. Fetch all the available tags<br>`git fetch`
+3. Show all the available tags<br>`git tag`
+4. Checkout one of the available tags<br>`git checkout {tag_name}`<br>Example: `git checkout v1.0.0`
+
+To switch back to the latest version, use your terminal to:
+
+1. Navigate to your MMM-PlexNowPlaying folder. If you are using the default installation directory, use the command:<br>`cd ~/MagicMirror/modules/MMM-ViewNotifications`
+2. Checkout the master branch<br>`git checkout master`
 
 ## License
 
