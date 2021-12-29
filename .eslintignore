@@ -1,0 +1,4 @@
+node_modules
+.vscode/
+.eslintrc.js
+MMM-ViewNotifications.js
