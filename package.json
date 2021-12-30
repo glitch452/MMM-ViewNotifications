@@ -1,0 +1,87 @@
+{
+  "name": "mmm-view-notifications",
+  "version": "2.0.0",
+  "description": "A module to display the notifications broadcast to all modules for the purpose of assisting in the module development process.",
+  "main": "MMM-ViewNotifications.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "npm run build -- --watch",
+    "format": "prettier --write .",
+    "type": "tsc --noEmit -p tsconfig.exclude.json",
+    "lint": "eslint '*/**/*.{js,ts}' --cache --report-unused-disable-directives --fix",
+    "lint-f": "eslint '*/**/*.{js,ts}' --report-unused-disable-directives --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glitch452/MMM-ViewNotifications.git"
+  },
+  "keywords": [
+    "MMM",
+    "MagicMirror",
+    "MagicMirror2",
+    "Magic",
+    "Mirror",
+    "Module",
+    "Notifications"
+  ],
+  "author": "David Dearden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/glitch452/MMM-ViewNotifications/issues"
+  },
+  "homepage": "https://github.com/glitch452/MMM-ViewNotifications#readme",
+  "dependencies": {
+    "zod": "^3.9.8"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/chai": "^4.3.0",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/magicmirror-module": "^2.16.1",
+    "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "lint-staged": "^12.1.2",
+    "mocha": "^9.1.2",
+    "moment": "^2.29.1",
+    "nyc": "^15.1.0",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.62.0",
+    "rollup-plugin-banner": "^0.2.1",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.3"
+  },
+  "lint-staged": {
+    "*.{json,yaml,yml,md}": "prettier --write",
+    "*.{js,ts}": "eslint --cache --fix"
+  },
+  "nyc": {
+    "all": true,
+    "check-coverage": false,
+    "lines": 95,
+    "statements": 95,
+    "functions": 95,
+    "branches": 95,
+    "extension": [
+      ".js",
+      ".ts"
+    ],
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": [
+      "**/*.spec.{js,ts}",
+      "**/__test__"
+    ]
+  }
+}

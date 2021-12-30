@@ -4,7 +4,7 @@ var BOOLEAN_PREFIXES_LOWER = BOOLEAN_PREFIXES_UPPER.map((i) => i.toLowerCase());
 module.exports = {
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
-    ecmaVersion: 'es6', // Allows for the parsing of modern ECMAScript features
+    ecmaVersion: 2021, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,

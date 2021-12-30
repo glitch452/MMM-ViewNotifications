@@ -1,0 +1,14 @@
+/**
+ * Magic Mirror
+ * Module Style Sheet: MMM-ViewNotifications
+ *
+ * By David Dearden
+ * MIT Licensed.
+ */
+
+/**
+ * Loading text
+ */
+.MMM-ViewNotifications .loading {
+  color: #666666;
+}
