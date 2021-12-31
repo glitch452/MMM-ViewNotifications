@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/glitch452/MMM-ViewNotifications#readme",
   "dependencies": {
+    "jsx-dom": "^8.0.1-beta.4",
     "zod": "^3.9.8"
   },
   "devDependencies": {

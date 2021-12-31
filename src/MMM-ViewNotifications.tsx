@@ -3,7 +3,8 @@ import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import Log from 'logger';
 import { ZodError } from 'zod';
 import { replaceAll } from 'utils';
-import JSX from './JSX';
+// import JSX from './JSX';
+import React from 'jsx-dom';
 
 /* Magic Mirror
  * Module: MMM-ViewNotifications
@@ -151,7 +152,7 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
     return output;
   },
 
-  getDom(): JSX.Element {
+  getDom(): React.ReactNode {
     if (this.has_config_error) {
       return <div className="loading small">Configuration error! See logs for details.</div>;
     }
