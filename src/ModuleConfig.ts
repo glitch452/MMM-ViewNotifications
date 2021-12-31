@@ -11,7 +11,7 @@ export const module_config_schema = z.object({
   // The maximum number of notifications to show, set to 0 for unlimited (New ones push out older ones)
   maximum: z.number().int().min(0).default(8),
   // The default icon to use for a module who's icon is not set in the icons list
-  defaultIcon: z.string().default('bullhorn'),
+  defaultIcon: z.string().nonempty().default('bullhorn'),
   // The icons to use for notifications from specific modules
   icons: z.record(z.string()).default({
     calendar: 'calendar-check-o',
@@ -22,13 +22,13 @@ export const module_config_schema = z.object({
   // If true, new notifications are added to the top of the list, if false, the bottom
   newestOnTop: z.boolean().default(true),
   // A white list of modules, if not empty, only notifications from these modules will be displayed
-  includeModules: z.string().array().default([]),
+  includeModules: z.string().nonempty().array().default([]),
   // A black list of modules, notifications from these modules will not be displayed
-  excludeModules: z.string().array().default([]),
+  excludeModules: z.string().nonempty().array().default([]),
   // A white list of notifications, if not empty, only notifications of these types will be displayed
-  includeNotifications: z.string().array().default([]),
+  includeNotifications: z.string().nonempty().array().default([]),
   // A black list of modules, notifications of these types will not be displayed
-  excludeNotifications: z.string().array().default([]),
+  excludeNotifications: z.string().nonempty().array().default([]),
   /* The format to use for the notification item added to the list, Possible variables include:
    * {notification} 	The name of the notification
    * {module}			The name of the module that sent the notification
@@ -39,7 +39,7 @@ export const module_config_schema = z.object({
    * {date|format}	The date/time that the notification was sent, in the specified format,
    * 					using https://momentjs.com/docs/#/displaying/format/ for formatting. Ex: {date|HH:mm}
    */
-  format: z.string().default('{time}: "{module}" sent "{notification}"'),
+  format: z.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
   // Enable developer mode (increased logging and other tools for assisting development)
   developerMode: z.boolean().default(false),
 });

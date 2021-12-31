@@ -1,18 +1,8 @@
 import moment from 'moment';
 import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import Log from 'logger';
-import { ZodError } from 'zod';
 import { replaceAll } from 'utils';
-// import JSX from './JSX';
 import React from 'jsx-dom';
-
-/* Magic Mirror
- * Module: MMM-ViewNotifications
- * Description: A module to display the notifications broadcast to all modules for the purpose of assisting in the module development process.
- *
- * By David Dearden
- * MIT Licensed.
- */
 
 Module.register<ModuleConfig>('MMM-ViewNotifications', {
   /**
@@ -20,17 +10,15 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
    * @param config (object) The user specified configuration options
    */
   setConfig(config: unknown): void {
-    try {
-      this.config = module_config_schema.parse(config);
-      this.has_config_error = false;
-    } catch (e: unknown) {
-      if (e instanceof ZodError) {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        this.config = { developerMode: false } as ModuleConfig;
-        this.has_config_error = true;
-        this.log(`Configuration Error: ${e.message}`);
-      } else {
-        throw e;
+    const result = module_config_schema.safeParse(config);
+    this.has_config_error = !result.success;
+    if (result.success) {
+      this.config = result.data;
+    } else {
+      for (const ze of result.error.errors) {
+        const message = `'${ze.path}': ${ze.message}`;
+        this.config_errors.push(message);
+        this.log(`Configuration error '${ze.code}' in option ${message}`, 'warn');
       }
     }
   },
@@ -41,6 +29,8 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
   // Initialize the custom module properties
   last_update: new Date(),
   notifications: [],
+  has_config_error: false,
+  config_errors: [],
 
   start() {
     this.log(`start(): this.data: ${JSON.stringify(this.data)}`, 'dev');
@@ -154,7 +144,17 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
 
   getDom(): React.ReactNode {
     if (this.has_config_error) {
-      return <div className="loading small">Configuration error! See logs for details.</div>;
+      return (
+        <div className="loading small">
+          Configuration error!
+          {this.config_errors.map((e) => (
+            <>
+              <br />
+              {e}
+            </>
+          ))}
+        </div>
+      );
     }
 
     const now = new Date();
@@ -198,7 +198,10 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
   log(message: string, type?: 'error' | 'warn' | 'info' | 'dev') {
     let msg: string;
 
-    if (this.config.developerMode) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const is_dev_mode = this.config?.developerMode;
+
+    if (is_dev_mode) {
       const date = new Date();
       const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       msg = `${this.name}: (${this.data.index})(${time}) ${message}`;
@@ -217,7 +220,7 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
         Log.info(msg);
         break;
       case 'dev':
-        if (this.config.developerMode) {
+        if (is_dev_mode) {
           Log.info(msg);
         }
         break;

@@ -27,7 +27,7 @@
             .default(8)
             .transform(function (x) { return x * 1000; }),
         maximum: external.number().int().min(0).default(8),
-        defaultIcon: external.string().default('bullhorn'),
+        defaultIcon: external.string().nonempty().default('bullhorn'),
         icons: external.record(external.string()).default({
             calendar: 'calendar-check-o',
             clock: 'clock-o',
@@ -35,11 +35,11 @@
             weatherforecast: 'thermometer',
         }),
         newestOnTop: external.boolean().default(true),
-        includeModules: external.string().array().default([]),
-        excludeModules: external.string().array().default([]),
-        includeNotifications: external.string().array().default([]),
-        excludeNotifications: external.string().array().default([]),
-        format: external.string().default('{time}: "{module}" sent "{notification}"'),
+        includeModules: external.string().nonempty().array().default([]),
+        excludeModules: external.string().nonempty().array().default([]),
+        includeNotifications: external.string().nonempty().array().default([]),
+        excludeNotifications: external.string().nonempty().array().default([]),
+        format: external.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
         developerMode: external.boolean().default(false),
     });
 
@@ -531,24 +531,25 @@
 
     Module.register('MMM-ViewNotifications', {
         setConfig: function (config) {
-            try {
-                this.config = module_config_schema.parse(config);
-                this.has_config_error = false;
+            var result = module_config_schema.safeParse(config);
+            this.has_config_error = !result.success;
+            if (result.success) {
+                this.config = result.data;
             }
-            catch (e) {
-                if (e instanceof ZodError) {
-                    this.config = { developerMode: false };
-                    this.has_config_error = true;
-                    this.log("Configuration Error: ".concat(e.message));
-                }
-                else {
-                    throw e;
+            else {
+                for (var _i = 0, _a = result.error.errors; _i < _a.length; _i++) {
+                    var ze = _a[_i];
+                    var message = "'".concat(ze.path, "': ").concat(ze.message);
+                    this.config_errors.push(message);
+                    this.log("Configuration error '".concat(ze.code, "' in option ").concat(message), 'warn');
                 }
             }
         },
         requiresVersion: '2.1.0',
         last_update: new Date(),
         notifications: [],
+        has_config_error: false,
+        config_errors: [],
         start: function () {
             this.log("start(): this.data: ".concat(JSON.stringify(this.data)), 'dev');
             this.log("start(): this.config: ".concat(JSON.stringify(this.config)), 'dev');
@@ -642,7 +643,11 @@
         getDom: function () {
             var _this = this;
             if (this.has_config_error) {
-                return index.createElement("div", { className: "loading small" }, "Configuration error! See logs for details.");
+                return (index.createElement("div", { className: "loading small" },
+                    "Configuration error!",
+                    this.config_errors.map(function (e) { return (index.createElement(index.Fragment, null,
+                        index.createElement("br", null),
+                        e)); })));
             }
             var now = new Date();
             return (index.createElement("div", { className: "small" },
@@ -664,8 +669,10 @@
             return ['MMM-ViewNotifications.css', 'font-awesome.css'];
         },
         log: function (message, type) {
+            var _a;
             var msg;
-            if (this.config.developerMode) {
+            var is_dev_mode = (_a = this.config) === null || _a === void 0 ? void 0 : _a.developerMode;
+            if (is_dev_mode) {
                 var date = new Date();
                 var time = "".concat(date.getHours(), ":").concat(date.getMinutes(), ":").concat(date.getSeconds());
                 msg = "".concat(this.name, ": (").concat(this.data.index, ")(").concat(time, ") ").concat(message);
@@ -684,7 +691,7 @@
                     Log__default["default"].info(msg);
                     break;
                 case 'dev':
-                    if (this.config.developerMode) {
+                    if (is_dev_mode) {
                         Log__default["default"].info(msg);
                     }
                     break;

@@ -13,6 +13,7 @@ declare namespace Module {
   interface ModuleProperties<T> {
     // Add custom fields to the module definition
     has_config_error: boolean;
+    config_errors: string[];
     last_update: Date;
     notifications: Notification[];
 
