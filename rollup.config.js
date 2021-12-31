@@ -2,7 +2,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import banner from 'rollup-plugin-banner';
-import jsx from 'rollup-plugin-jsx';
 
 const BANNER_TEXT = [
   'MMM-ViewNotifications',
@@ -19,13 +18,7 @@ const BANNER_TEXT = [
 export default [
   {
     input: './src/MMM-ViewNotifications.tsx',
-    plugins: [
-      jsx({ factory: 'JSX.createElement' }),
-      typescript(),
-      resolve(),
-      commonjs(),
-      banner(BANNER_TEXT),
-    ],
+    plugins: [typescript(), resolve(), commonjs(), banner(BANNER_TEXT)],
     output: {
       file: './MMM-ViewNotifications.js',
       format: 'iife',

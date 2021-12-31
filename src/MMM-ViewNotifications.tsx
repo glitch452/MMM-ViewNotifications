@@ -4,7 +4,6 @@ import Log from 'logger';
 import { ZodError } from 'zod';
 import { replaceAll } from 'utils';
 import JSX from './JSX';
-JSX.init();
 
 /* Magic Mirror
  * Module: MMM-ViewNotifications

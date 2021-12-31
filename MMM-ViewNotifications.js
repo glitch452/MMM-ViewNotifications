@@ -259,24 +259,20 @@
         getDom: function () {
             var _this = this;
             if (this.has_config_error) {
-                return JSX.createElement('div', {className: "loading small"}, ["Configuration error! See logs for details."]);
+                return JSX.createElement("div", { className: "loading small" }, "Configuration error! See logs for details.");
             }
             var now = new Date();
-            return (JSX.createElement('div', {className: "small"}, [
-            JSX.createElement('ul', {className: "fa-ul"}, [
-              this.notifications
+            return (JSX.createElement("div", { className: "small" },
+                JSX.createElement("ul", { className: "fa-ul" }, this.notifications
                     .filter(function (n) { return _this.config.timeout === 0 || now < n.timeout; })
                     .map(function (n) {
                     var icon_name = _this.config.icons[n.sender.name]
                         ? _this.config.icons[n.sender.name]
                         : _this.config.defaultIcon;
-                    return (JSX.createElement('li', null, [
-                      JSX.createElement('span', {className: "fa-li fa fa-".concat(icon_name)}),
-                      _this.formatNotification(n)
-                    ]));
-                })
-            ])
-          ]));
+                    return (JSX.createElement("li", null,
+                        JSX.createElement("span", { className: "fa-li fa fa-".concat(icon_name) }),
+                        _this.formatNotification(n)));
+                }))));
         },
         getScripts: function () {
             return ['moment.js'];
