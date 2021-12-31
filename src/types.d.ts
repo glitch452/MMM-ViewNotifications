@@ -23,6 +23,7 @@ declare namespace Module {
 
     log: (message: string, type?: 'error' | 'warn' | 'info' | 'dev') => void;
     setConfig: (config: unknown) => void;
+    getDom: () => JSX.Element;
 
     // Add the index field to the module data definition
     readonly data: {

@@ -35,6 +35,7 @@
     "iife",
     "magicmirror",
     "Ooops",
+    "treeshake",
     "viewnotifications",
     "weatherforecast"
   ]

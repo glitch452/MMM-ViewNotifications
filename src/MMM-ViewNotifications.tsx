@@ -3,6 +3,8 @@ import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import Log from 'logger';
 import { ZodError } from 'zod';
 import { replaceAll } from 'utils';
+import JSX from './JSX';
+JSX.init();
 
 /* Magic Mirror
  * Module: MMM-ViewNotifications
@@ -150,42 +152,31 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
     return output;
   },
 
-  getDom(): HTMLElement {
-    const wrapper = document.createElement('div');
-
+  getDom(): JSX.Element {
     if (this.has_config_error) {
-      wrapper.classList.add('loading');
-      wrapper.classList.add('small');
-      wrapper.innerHTML = 'Configuration error!  See logs for details.';
-      return wrapper;
+      return <div className="loading small">Configuration error! See logs for details.</div>;
     }
 
     const now = new Date();
-
-    // Create and configure DOM elements
-    wrapper.classList.add('small');
-    const list_container = document.createElement('ul');
-    list_container.classList.add('fa-ul');
-
-    // Loop trough the notifications and add them to the DOM containers
-    for (const n of this.notifications) {
-      if (this.config.timeout === 0 || now < n.timeout) {
-        const new_list_item = document.createElement('li');
-        const icon_name = this.config.icons[n.sender.name]
-          ? this.config.icons[n.sender.name]
-          : this.config.defaultIcon;
-
-        const icon = document.createElement('span');
-        icon.classList.add('fa-li', 'fa', `fa-${icon_name}`);
-        new_list_item.appendChild(icon);
-        new_list_item.innerHTML += this.formatNotification(n);
-        list_container.appendChild(new_list_item);
-      }
-    }
-
-    wrapper.appendChild(list_container);
-
-    return wrapper;
+    return (
+      <div className="small">
+        <ul className="fa-ul">
+          {this.notifications
+            .filter((n) => this.config.timeout === 0 || now < n.timeout)
+            .map((n) => {
+              const icon_name = this.config.icons[n.sender.name]
+                ? this.config.icons[n.sender.name]
+                : this.config.defaultIcon;
+              return (
+                <li>
+                  <span className={`fa-li fa fa-${icon_name}`} />
+                  {this.formatNotification(n)}
+                </li>
+              );
+            })}
+        </ul>
+      </div>
+    );
   },
 
   getScripts() {

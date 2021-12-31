@@ -8,6 +8,7 @@
     "downlevelIteration": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
     "lib": ["ES2021", "DOM"],
     "module": "esnext",
     "moduleResolution": "node",
