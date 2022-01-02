@@ -3,6 +3,7 @@ import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import { replaceAll } from 'utils';
 import { MmmLogger } from 'MmmLogger';
 import React from 'jsx-dom';
+import LoadingErrors from 'LoadingErrors';
 
 Module.register<ModuleConfig>('MMM-ViewNotifications', {
   /**
@@ -168,17 +169,7 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
 
   getDom(): React.ReactNode {
     if (this.has_config_error) {
-      return (
-        <div className="loading small">
-          Configuration error!
-          {this.config_errors.map((e) => (
-            <>
-              <br />
-              {e}
-            </>
-          ))}
-        </div>
-      );
+      return <LoadingErrors error_list={this.config_errors} />;
     }
 
     const now = new Date();

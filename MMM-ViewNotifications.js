@@ -591,6 +591,15 @@
       Fragment,
     };
 
+    var LoadingErrors = function (_a) {
+        var error_list = _a.error_list;
+        return (index.createElement("div", { className: "loading small" },
+            "Configuration error!",
+            error_list.map(function (e) { return (index.createElement(index.Fragment, null,
+                index.createElement("br", null),
+                e)); })));
+    };
+
     Module.register('MMM-ViewNotifications', {
         init: function () {
             this.has_config_error = false;
@@ -723,11 +732,7 @@
         getDom: function () {
             var _this = this;
             if (this.has_config_error) {
-                return (index.createElement("div", { className: "loading small" },
-                    "Configuration error!",
-                    this.config_errors.map(function (e) { return (index.createElement(index.Fragment, null,
-                        index.createElement("br", null),
-                        e)); })));
+                return index.createElement(LoadingErrors, { error_list: this.config_errors });
             }
             var now = new Date();
             return (index.createElement("div", { className: "small" },
