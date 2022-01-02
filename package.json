@@ -1,21 +1,17 @@
 {
   "name": "mmm-view-notifications",
   "version": "2.0.0",
-  "description": "A module to display the notifications broadcast to all modules for the purpose of assisting in the module development process.",
-  "main": "MMM-ViewNotifications.js",
-  "scripts": {
-    "build": "rollup -c",
-    "watch": "npm run build -- --watch",
-    "format": "prettier --write .",
-    "type": "tsc --noEmit -p tsconfig.exclude.json",
-    "lint": "eslint '*/**/*.{js,ts}' --cache --report-unused-disable-directives --fix",
-    "lint-f": "eslint '*/**/*.{js,ts}' --report-unused-disable-directives --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "A module to display the notifications broadcast to all modules, for the purpose of assisting in the module development process.",
+  "author": "David Dearden",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/glitch452/MMM-ViewNotifications.git"
   },
+  "bugs": {
+    "url": "https://github.com/glitch452/MMM-ViewNotifications/issues"
+  },
+  "homepage": "https://github.com/glitch452/MMM-ViewNotifications#readme",
   "keywords": [
     "MMM",
     "MagicMirror",
@@ -25,42 +21,51 @@
     "Module",
     "Notifications"
   ],
-  "author": "David Dearden",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/glitch452/MMM-ViewNotifications/issues"
+  "main": "MMM-ViewNotifications.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "npm run build -- --watch",
+    "format": "prettier --write .",
+    "type": "tsc --noEmit -p tsconfig.exclude.json",
+    "lint": "eslint '*/**/*.{js,ts}' --cache --report-unused-disable-directives --fix",
+    "lint-f": "eslint '*/**/*.{js,ts}' --report-unused-disable-directives --fix",
+    "test": "nyc mocha -r ts-node/register src/**/*.spec.ts",
+    "test:ci": "nyc mocha --forbid-only --forbid-pending --color -r ts-node/register src/**/*.spec.ts",
+    "test:watch": "mocha -w --watch-files src -r ts-node/register src/**/*.spec.ts"
   },
-  "homepage": "https://github.com/glitch452/MMM-ViewNotifications#readme",
   "dependencies": {
     "jsx-dom": "^8.0.1-beta.4",
-    "zod": "^3.9.8"
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@rollup/plugin-node-resolve": "^13.1.2",
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",
     "@types/magicmirror-module": "^2.16.1",
     "@types/mocha": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.6.0",
-    "@typescript-eslint/parser": "^5.6.0",
+    "@types/sinon": "^10.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.1.0",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "lint-staged": "^12.1.2",
-    "mocha": "^9.1.2",
+    "faker": "^5.5.3",
+    "lint-staged": "^12.1.4",
+    "mocha": "^9.1.3",
     "moment": "^2.29.1",
     "nyc": "^15.1.0",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.62.0",
     "rollup-plugin-banner": "^0.2.1",
-    "ts-node": "^10.2.1",
+    "sinon": "^12.0.1",
+    "ts-node": "^10.4.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.5.3"
+    "typescript": "^4.5.4"
   },
   "lint-staged": {
     "*.{json,yaml,yml,md}": "prettier --write",
@@ -75,14 +80,15 @@
     "branches": 95,
     "extension": [
       ".js",
-      ".ts"
+      ".ts",
+      ".tsx"
     ],
     "include": [
       "src/**/*"
     ],
     "exclude": [
       "**/*.spec.{js,ts}",
-      "**/__test__"
+      "**/__tests__"
     ]
   }
 }

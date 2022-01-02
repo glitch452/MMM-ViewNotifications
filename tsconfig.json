@@ -9,14 +9,15 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    // "jsxFactory": "JSX.createElement",
-    // "jsxFragmentFactory": "JSX.Fragment",
     "lib": ["ES2021", "DOM"],
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noEmit": false,
     "noImplicitAny": true,
     "removeComments": true,
+    "paths": {
+      "*": ["node_modules/*"]
+    },
     "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,

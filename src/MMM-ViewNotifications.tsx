@@ -1,9 +1,9 @@
 import moment from 'moment';
 import { ModuleConfig, module_config_schema } from './ModuleConfig';
-import { replaceAll } from 'utils';
-import { MmmLogger } from 'MmmLogger';
+import { replaceAll } from './utils';
+import { MmmLogger } from './MmmLogger';
 import React from 'jsx-dom';
-import LoadingErrors from 'LoadingErrors';
+import LoadingErrors from './LoadingErrors';
 
 Module.register<ModuleConfig>('MMM-ViewNotifications', {
   /**
@@ -13,8 +13,6 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
     this.has_config_error = false;
     this.config_errors = [];
     this.logger = new MmmLogger(this);
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    this.config = {} as ModuleConfig;
 
     // Set module specific fields
     this.requiresVersion = '2.1.0';
