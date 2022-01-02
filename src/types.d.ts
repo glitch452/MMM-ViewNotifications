@@ -1,5 +1,3 @@
-// import { Notification } from './Notification';
-
 declare namespace Module {
   interface Notification {
     datetime: Date;
@@ -11,18 +9,18 @@ declare namespace Module {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ModuleProperties<T> {
-    // Add custom fields to the module definition
-    has_config_error: boolean;
-    config_errors: string[];
+    // Add module specific fields and methods to the module definition
     last_update: Date;
     notifications: Notification[];
-
-    // Add custom methods to the module definition
     addNotification: (n: Notification) => void;
+    shouldAddNotification: (n: Module.Notification) => boolean;
     formatNotification: (n: Notification) => string;
     cleanupNotificationsList: () => void;
 
-    log: (message: string, type?: 'error' | 'warn' | 'info' | 'dev') => void;
+    // Add standard fields and methods to the module definition
+    has_config_error: boolean;
+    config_errors: string[];
+    logger: Logger;
     setConfig: (config: unknown) => void;
     getDom: () => React.ReactNode;
 
@@ -35,5 +33,27 @@ declare namespace Module {
       position: string;
       index: number;
     };
+
+    // Make entries in the module unknown unless defined here
+    [key: string]: unknown;
+  }
+
+  const enum LoggerLevels {
+    INFO,
+    WARN,
+    ERROR,
+    DEBUG,
+  }
+  type LoggerLevel = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
+
+  interface Logger {
+    level: LoggerLevels;
+    properties: Module.ModuleProperties<unknown>;
+    log: (message: string) => void;
+    info: (message: string) => void;
+    warn: (message: string) => void;
+    error: (message: string) => void;
+    debug: (message: string) => void;
+    setLogLevel?: (level: Module.LoggerLevels | Module.LoggerLevel) => void;
   }
 }

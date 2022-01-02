@@ -40,7 +40,7 @@
         includeNotifications: external.string().nonempty().array().default([]),
         excludeNotifications: external.string().nonempty().array().default([]),
         format: external.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
-        developerMode: external.boolean().default(false),
+        logLevel: external.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
     });
 
     function replaceAll(input, find, replace) {
@@ -58,6 +58,68 @@
         output += processing;
         return output;
     }
+
+    var MmmLogger = (function () {
+        function MmmLogger(properties, level) {
+            if (level === void 0) { level = 2; }
+            this.level = 2;
+            this.properties = properties;
+            this.setLogLevel(level);
+        }
+        MmmLogger.prototype.setLogLevel = function (level) {
+            if (level === void 0) { level = 2; }
+            if (typeof level === 'string') {
+                this.level = this.convertLevel(level);
+            }
+            else {
+                this.level = level;
+            }
+        };
+        MmmLogger.prototype.log = function (message) {
+            Log__default["default"].log(this.processMessage(message));
+        };
+        MmmLogger.prototype.info = function (message) {
+            Log__default["default"].info(this.processMessage(message));
+        };
+        MmmLogger.prototype.warn = function (message) {
+            if (this.level >= 1) {
+                Log__default["default"].warn(this.processMessage(message));
+            }
+        };
+        MmmLogger.prototype.error = function (message) {
+            if (this.level >= 2) {
+                Log__default["default"].error(this.processMessage(message));
+            }
+        };
+        MmmLogger.prototype.debug = function (message) {
+            if (this.level >= 3) {
+                Log__default["default"].info(this.processMessage(message));
+            }
+        };
+        MmmLogger.prototype.processMessage = function (message) {
+            if (this.level === 3) {
+                var date = new Date();
+                var time = "".concat(date.getHours(), ":").concat(date.getMinutes(), ":").concat(date.getSeconds());
+                return "".concat(this.properties.name, ": (").concat(this.properties.data.index, ")(").concat(time, ") ").concat(message);
+            }
+            return "".concat(this.properties.name, ": ").concat(message);
+        };
+        MmmLogger.prototype.convertLevel = function (level) {
+            switch (level) {
+                case 'INFO':
+                    return 0;
+                case 'WARN':
+                    return 1;
+                case 'ERROR':
+                    return 2;
+                case 'DEBUG':
+                    return 3;
+                default:
+                    throw new Error('Invalid Logger Level');
+            }
+        };
+        return MmmLogger;
+    }());
 
     /* eslint-disable */
     const keys = Object.keys;
@@ -530,29 +592,41 @@
     };
 
     Module.register('MMM-ViewNotifications', {
+        init: function () {
+            this.has_config_error = false;
+            this.config_errors = [];
+            this.logger = new MmmLogger(this);
+            this.config = {};
+            this.requiresVersion = '2.1.0';
+            this.last_update = new Date();
+            this.notifications = [];
+        },
         setConfig: function (config) {
+            var _a, _b;
             var result = module_config_schema.safeParse(config);
             this.has_config_error = !result.success;
             if (result.success) {
                 this.config = result.data;
+                (_b = (_a = this.logger).setLogLevel) === null || _b === void 0 ? void 0 : _b.call(_a, this.config.logLevel);
             }
             else {
-                for (var _i = 0, _a = result.error.errors; _i < _a.length; _i++) {
-                    var ze = _a[_i];
+                for (var _i = 0, _c = result.error.errors; _i < _c.length; _i++) {
+                    var ze = _c[_i];
                     var message = "'".concat(ze.path, "': ").concat(ze.message);
                     this.config_errors.push(message);
-                    this.log("Configuration error '".concat(ze.code, "' in option ").concat(message), 'warn');
+                    this.logger.warn("Configuration error '".concat(ze.code, "' in option ").concat(message));
                 }
             }
         },
-        requiresVersion: '2.1.0',
-        last_update: new Date(),
-        notifications: [],
-        has_config_error: false,
-        config_errors: [],
+        getScripts: function () {
+            return ['moment.js'];
+        },
+        getStyles: function () {
+            return ['MMM-ViewNotifications.css', 'font-awesome.css'];
+        },
         start: function () {
-            this.log("start(): this.data: ".concat(JSON.stringify(this.data)), 'dev');
-            this.log("start(): this.config: ".concat(JSON.stringify(this.config)), 'dev');
+            this.logger.debug("start(): this.data: ".concat(JSON.stringify(this.data)));
+            this.logger.debug("start(): this.config: ".concat(JSON.stringify(this.config)));
         },
         notificationReceived: function (notification, payload, sender) {
             var _this = this;
@@ -560,14 +634,14 @@
                 return;
             }
             if (sender) {
-                this.log("notificationReceived(): ".concat(notification, " ").concat(JSON.stringify(payload), " sender.name"), 'dev');
+                this.logger.debug("notificationReceived(): ".concat(notification, " ").concat(JSON.stringify(payload), " sender.name"));
                 this.last_update = new Date();
                 if (this.config.timeout > 0) {
-                    var timeout_offset = 50;
+                    var timeout_offset_in_ms = 50;
                     setTimeout(function () {
                         _this.cleanupNotificationsList();
                         _this.updateDom();
-                    }, this.config.timeout + timeout_offset);
+                    }, this.config.timeout + timeout_offset_in_ms);
                 }
                 this.addNotification({
                     datetime: new Date(),
@@ -579,22 +653,28 @@
                 this.updateDom();
             }
         },
-        addNotification: function (n) {
+        shouldAddNotification: function (n) {
             var is_excluded = this.config.excludeModules.includes(n.sender.name) ||
                 this.config.excludeNotifications.includes(n.notification);
             if (is_excluded) {
-                return;
+                return false;
             }
-            var is_name_not_included = this.config.includeModules.length > 0 && !this.config.includeModules.includes(n.sender.name);
+            var is_name_not_included = this.config.includeModules.length && !this.config.includeModules.includes(n.sender.name);
             if (is_name_not_included) {
-                return;
+                return false;
             }
-            var is_notification_not_included = this.config.includeNotifications.length > 0 &&
+            var is_notification_not_included = this.config.includeNotifications.length &&
                 !this.config.includeNotifications.includes(n.notification);
             if (is_notification_not_included) {
+                return false;
+            }
+            return true;
+        },
+        addNotification: function (n) {
+            if (!this.shouldAddNotification(n)) {
                 return;
             }
-            var is_maximum_size = this.config.maximum > 0 && this.notifications.length === this.config.maximum;
+            var is_maximum_size = this.config.maximum && this.notifications.length === this.config.maximum;
             if (this.config.newestOnTop) {
                 this.notifications.unshift(n);
                 if (is_maximum_size) {
@@ -661,43 +741,6 @@
                         index.createElement("span", { className: "fa-li fa fa-".concat(icon_name) }),
                         _this.formatNotification(n)));
                 }))));
-        },
-        getScripts: function () {
-            return ['moment.js'];
-        },
-        getStyles: function () {
-            return ['MMM-ViewNotifications.css', 'font-awesome.css'];
-        },
-        log: function (message, type) {
-            var _a;
-            var msg;
-            var is_dev_mode = (_a = this.config) === null || _a === void 0 ? void 0 : _a.developerMode;
-            if (is_dev_mode) {
-                var date = new Date();
-                var time = "".concat(date.getHours(), ":").concat(date.getMinutes(), ":").concat(date.getSeconds());
-                msg = "".concat(this.name, ": (").concat(this.data.index, ")(").concat(time, ") ").concat(message);
-            }
-            else {
-                msg = "".concat(this.name, ": ").concat(message);
-            }
-            switch (type) {
-                case 'error':
-                    Log__default["default"].error(msg);
-                    break;
-                case 'warn':
-                    Log__default["default"].warn(msg);
-                    break;
-                case 'info':
-                    Log__default["default"].info(msg);
-                    break;
-                case 'dev':
-                    if (is_dev_mode) {
-                        Log__default["default"].info(msg);
-                    }
-                    break;
-                default:
-                    Log__default["default"].log(msg);
-            }
         },
     });
 

@@ -40,8 +40,8 @@ export const module_config_schema = z.object({
    * 					using https://momentjs.com/docs/#/displaying/format/ for formatting. Ex: {date|HH:mm}
    */
   format: z.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
-  // Enable developer mode (increased logging and other tools for assisting development)
-  developerMode: z.boolean().default(false),
+  // The amount of detail to include in logs
+  logLevel: z.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
 });
 
 export type ModuleConfig = z.infer<typeof module_config_schema>;

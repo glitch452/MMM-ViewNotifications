@@ -1,10 +1,26 @@
 import moment from 'moment';
 import { ModuleConfig, module_config_schema } from './ModuleConfig';
-import Log from 'logger';
 import { replaceAll } from 'utils';
+import { MmmLogger } from 'MmmLogger';
 import React from 'jsx-dom';
 
 Module.register<ModuleConfig>('MMM-ViewNotifications', {
+  /**
+   * Initialize standard and module specific fields
+   */
+  init() {
+    this.has_config_error = false;
+    this.config_errors = [];
+    this.logger = new MmmLogger(this);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    this.config = {} as ModuleConfig;
+
+    // Set module specific fields
+    this.requiresVersion = '2.1.0';
+    this.last_update = new Date();
+    this.notifications = [];
+  },
+
   /**
    * Override the setConfig function to use zod for parsing the configuration values
    * @param config (object) The user specified configuration options
@@ -12,51 +28,51 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
   setConfig(config: unknown): void {
     const result = module_config_schema.safeParse(config);
     this.has_config_error = !result.success;
+
     if (result.success) {
       this.config = result.data;
+      this.logger.setLogLevel?.(this.config.logLevel);
     } else {
       for (const ze of result.error.errors) {
         const message = `'${ze.path}': ${ze.message}`;
         this.config_errors.push(message);
-        this.log(`Configuration error '${ze.code}' in option ${message}`, 'warn');
+        this.logger.warn(`Configuration error '${ze.code}' in option ${message}`);
       }
     }
   },
 
-  // Required version of MagicMirror
-  requiresVersion: '2.1.0',
+  getScripts() {
+    return ['moment.js'];
+  },
 
-  // Initialize the custom module properties
-  last_update: new Date(),
-  notifications: [],
-  has_config_error: false,
-  config_errors: [],
+  getStyles() {
+    return ['MMM-ViewNotifications.css', 'font-awesome.css'];
+  },
 
   start() {
-    this.log(`start(): this.data: ${JSON.stringify(this.data)}`, 'dev');
-    this.log(`start(): this.config: ${JSON.stringify(this.config)}`, 'dev');
+    this.logger.debug(`start(): this.data: ${JSON.stringify(this.data)}`);
+    this.logger.debug(`start(): this.config: ${JSON.stringify(this.config)}`);
   },
 
   notificationReceived(notification, payload, sender?: Module.ModuleProperties<unknown>) {
     if (this.has_config_error) {
       return;
     }
-    // If the notification is coming from another module and not from MM itself
+    // Check if the notification is coming from another module and not from MM itself
     if (sender) {
-      this.log(
+      this.logger.debug(
         `notificationReceived(): ${notification} ${JSON.stringify(payload)} sender.name`,
-        'dev',
       );
 
       this.last_update = new Date();
 
       if (this.config.timeout > 0) {
         // Add a little time to make sure the current one has expired
-        const timeout_offset = 50;
+        const timeout_offset_in_ms = 50;
         setTimeout(() => {
           this.cleanupNotificationsList();
           this.updateDom();
-        }, this.config.timeout + timeout_offset);
+        }, this.config.timeout + timeout_offset_in_ms);
       }
 
       this.addNotification({
@@ -70,29 +86,37 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
     }
   },
 
-  addNotification(n: Module.Notification): void {
+  shouldAddNotification(n: Module.Notification): boolean {
     const is_excluded =
       this.config.excludeModules.includes(n.sender.name) ||
       this.config.excludeNotifications.includes(n.notification);
     if (is_excluded) {
-      return;
+      return false;
     }
 
     const is_name_not_included =
-      this.config.includeModules.length > 0 && !this.config.includeModules.includes(n.sender.name);
+      this.config.includeModules.length && !this.config.includeModules.includes(n.sender.name);
     if (is_name_not_included) {
-      return;
+      return false;
     }
 
     const is_notification_not_included =
-      this.config.includeNotifications.length > 0 &&
+      this.config.includeNotifications.length &&
       !this.config.includeNotifications.includes(n.notification);
     if (is_notification_not_included) {
+      return false;
+    }
+
+    return true;
+  },
+
+  addNotification(n: Module.Notification): void {
+    if (!this.shouldAddNotification(n)) {
       return;
     }
 
     const is_maximum_size =
-      this.config.maximum > 0 && this.notifications.length === this.config.maximum;
+      this.config.maximum && this.notifications.length === this.config.maximum;
 
     if (this.config.newestOnTop) {
       this.notifications.unshift(n);
@@ -177,55 +201,5 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
         </ul>
       </div>
     );
-  },
-
-  getScripts() {
-    return ['moment.js'];
-  },
-
-  getStyles() {
-    return ['MMM-ViewNotifications.css', 'font-awesome.css'];
-  },
-
-  /**
-   * The log function is a convenience alias for logging.
-   * This is an alias for the MagicMirror Log functions with a developer mode feature added.
-   * This function prepends the module name to the message.
-   *
-   * @param message (string) The message to be sent to the console
-   * @param type (string) The type of message (dev, error, info, log)
-   */
-  log(message: string, type?: 'error' | 'warn' | 'info' | 'dev') {
-    let msg: string;
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const is_dev_mode = this.config?.developerMode;
-
-    if (is_dev_mode) {
-      const date = new Date();
-      const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-      msg = `${this.name}: (${this.data.index})(${time}) ${message}`;
-    } else {
-      msg = `${this.name}: ${message}`;
-    }
-
-    switch (type) {
-      case 'error':
-        Log.error(msg);
-        break;
-      case 'warn':
-        Log.warn(msg);
-        break;
-      case 'info':
-        Log.info(msg);
-        break;
-      case 'dev':
-        if (is_dev_mode) {
-          Log.info(msg);
-        }
-        break;
-      default:
-        Log.log(msg);
-    }
   },
 });
