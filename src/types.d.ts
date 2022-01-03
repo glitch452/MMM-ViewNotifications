@@ -34,6 +34,13 @@ declare namespace Module {
       index: number;
     };
 
+    // Make sender optional
+    notificationReceived: (
+      notification: string,
+      payload: Notification['payload'],
+      sender?: ModuleProperties<unknown>,
+    ) => void;
+
     // Make entries in the module unknown unless defined here
     [key: string]: unknown;
   }

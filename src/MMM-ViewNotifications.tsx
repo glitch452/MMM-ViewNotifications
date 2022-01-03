@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import { replaceAll } from './utils';
-import { MmmLogger } from './MmmLogger';
+import MmmLogger from './MmmLogger';
 import React from 'jsx-dom';
 import LoadingErrors from './LoadingErrors';
 
@@ -53,14 +53,18 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
     this.logger.debug(`start(): this.config: ${JSON.stringify(this.config)}`);
   },
 
-  notificationReceived(notification, payload, sender?: Module.ModuleProperties<unknown>) {
+  notificationReceived(
+    notification: string,
+    payload: Module.Notification['payload'],
+    sender?: Module.ModuleProperties<unknown>,
+  ) {
     if (this.has_config_error) {
       return;
     }
     // Check if the notification is coming from another module and not from MM itself
     if (sender) {
       this.logger.debug(
-        `notificationReceived(): ${notification} ${JSON.stringify(payload)} sender.name`,
+        `notificationReceived(): ${notification} ${JSON.stringify(payload)} ${sender.name}`,
       );
 
       this.last_update = new Date();

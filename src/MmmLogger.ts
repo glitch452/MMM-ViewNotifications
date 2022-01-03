@@ -1,6 +1,6 @@
 import Log from 'logger';
 
-export class MmmLogger implements Module.Logger {
+export default class MmmLogger implements Module.Logger {
   level: Module.LoggerLevels = Module.LoggerLevels.ERROR;
 
   properties: Module.ModuleProperties<unknown>;
