@@ -60,14 +60,15 @@
     }
 
     var MmmLogger = (function () {
-        function MmmLogger(properties, level) {
+        function MmmLogger(properties, level, transport) {
             if (level === void 0) { level = 2; }
+            if (transport === void 0) { transport = Log__default["default"]; }
             this.level = 2;
             this.properties = properties;
             this.setLogLevel(level);
+            this.transport = transport;
         }
         MmmLogger.prototype.setLogLevel = function (level) {
-            if (level === void 0) { level = 2; }
             if (typeof level === 'string') {
                 this.level = this.convertLevel(level);
             }
@@ -76,24 +77,24 @@
             }
         };
         MmmLogger.prototype.log = function (message) {
-            Log__default["default"].log(this.processMessage(message));
+            this.transport.log(this.processMessage(message));
         };
         MmmLogger.prototype.info = function (message) {
-            Log__default["default"].info(this.processMessage(message));
+            this.transport.info(this.processMessage(message));
         };
         MmmLogger.prototype.warn = function (message) {
             if (this.level >= 1) {
-                Log__default["default"].warn(this.processMessage(message));
+                this.transport.warn(this.processMessage(message));
             }
         };
         MmmLogger.prototype.error = function (message) {
             if (this.level >= 2) {
-                Log__default["default"].error(this.processMessage(message));
+                this.transport.error(this.processMessage(message));
             }
         };
         MmmLogger.prototype.debug = function (message) {
             if (this.level >= 3) {
-                Log__default["default"].info(this.processMessage(message));
+                this.transport.info(this.processMessage(message));
             }
         };
         MmmLogger.prototype.processMessage = function (message) {

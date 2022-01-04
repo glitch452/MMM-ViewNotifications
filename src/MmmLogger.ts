@@ -5,15 +5,19 @@ export default class MmmLogger implements Module.Logger {
 
   properties: Module.ModulePropertiesExt<unknown>;
 
+  readonly transport: typeof Log;
+
   constructor(
     properties: Module.ModulePropertiesExt<unknown>,
     level: Module.LoggerLevels | Module.LoggerLevel = Module.LoggerLevels.ERROR,
+    transport: typeof Log = Log,
   ) {
     this.properties = properties;
     this.setLogLevel(level);
+    this.transport = transport;
   }
 
-  setLogLevel(level: Module.LoggerLevels | Module.LoggerLevel = Module.LoggerLevels.ERROR) {
+  setLogLevel(level: Module.LoggerLevels | Module.LoggerLevel) {
     if (typeof level === 'string') {
       this.level = this.convertLevel(level);
     } else {
@@ -22,28 +26,28 @@ export default class MmmLogger implements Module.Logger {
   }
 
   log(message: string) {
-    Log.log(this.processMessage(message));
+    this.transport.log(this.processMessage(message));
   }
 
   info(message: string) {
-    Log.info(this.processMessage(message));
+    this.transport.info(this.processMessage(message));
   }
 
   warn(message: string) {
     if (this.level >= Module.LoggerLevels.WARN) {
-      Log.warn(this.processMessage(message));
+      this.transport.warn(this.processMessage(message));
     }
   }
 
   error(message: string) {
     if (this.level >= Module.LoggerLevels.ERROR) {
-      Log.error(this.processMessage(message));
+      this.transport.error(this.processMessage(message));
     }
   }
 
   debug(message: string) {
     if (this.level >= Module.LoggerLevels.DEBUG) {
-      Log.info(this.processMessage(message));
+      this.transport.info(this.processMessage(message));
     }
   }
 
