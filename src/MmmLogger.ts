@@ -3,10 +3,10 @@ import Log from 'logger';
 export default class MmmLogger implements Module.Logger {
   level: Module.LoggerLevels = Module.LoggerLevels.ERROR;
 
-  properties: Module.ModuleProperties<unknown>;
+  properties: Module.ModulePropertiesExt<unknown>;
 
   constructor(
-    properties: Module.ModuleProperties<unknown>,
+    properties: Module.ModulePropertiesExt<unknown>,
     level: Module.LoggerLevels | Module.LoggerLevel = Module.LoggerLevels.ERROR,
   ) {
     this.properties = properties;

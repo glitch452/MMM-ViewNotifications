@@ -7,6 +7,15 @@ declare namespace Module {
     sender: Module.ModuleProperties<unknown>;
   }
 
+  interface ModuleData {
+    classes: string;
+    file: string;
+    path: string;
+    header: string;
+    position: string;
+    index: number;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ModuleProperties<T> {
     // Add module specific fields and methods to the module definition
@@ -25,14 +34,7 @@ declare namespace Module {
     getDom: () => React.ReactNode;
 
     // Add the index field to the module data definition
-    readonly data: {
-      classes: string;
-      file: string;
-      path: string;
-      header: string;
-      position: string;
-      index: number;
-    };
+    readonly data: ModuleData;
 
     // Make sender optional
     notificationReceived: (
@@ -43,6 +45,12 @@ declare namespace Module {
 
     // Make entries in the module unknown unless defined here
     [key: string]: unknown;
+  }
+
+  // This is required for ts-node to resolve the type properly when testing with Mocha
+  interface ModulePropertiesExt<T> extends ModuleProperties<T> {
+    // Add the index field to the module data definition
+    readonly data: ModuleData;
   }
 
   const enum LoggerLevels {

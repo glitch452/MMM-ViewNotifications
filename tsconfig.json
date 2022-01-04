@@ -3,7 +3,7 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "checkJs": false,
     "downlevelIteration": false,
     "esModuleInterop": true,
@@ -16,12 +16,14 @@
     "noImplicitAny": true,
     "removeComments": true,
     "paths": {
+      "logger": ["mm_mocks/logger/*"],
       "*": ["node_modules/*"]
     },
     "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
     "target": "ES5",
-    "typeRoots": ["./node_modules/@types"]
-  }
+    "typeRoots": ["./node_modules/@types", "./types"]
+  },
+  "exclude": ["node_modules"]
 }
