@@ -22,13 +22,13 @@ export const module_config_schema = z.object({
   // If true, new notifications are added to the top of the list, if false, the bottom
   newestOnTop: z.boolean().default(true),
   // A white list of modules, if not empty, only notifications from these modules will be displayed
-  includeModules: z.string().nonempty().array().default([]),
+  includeModules: z.string().array().default([]),
   // A black list of modules, notifications from these modules will not be displayed
-  excludeModules: z.string().nonempty().array().default([]),
+  excludeModules: z.string().array().default([]),
   // A white list of notifications, if not empty, only notifications of these types will be displayed
-  includeNotifications: z.string().nonempty().array().default([]),
+  includeNotifications: z.string().array().default([]),
   // A black list of modules, notifications of these types will not be displayed
-  excludeNotifications: z.string().nonempty().array().default([]),
+  excludeNotifications: z.string().array().default([]),
   /* The format to use for the notification item added to the list, Possible variables include:
    * {notification} 	The name of the notification
    * {module}			The name of the module that sent the notification
