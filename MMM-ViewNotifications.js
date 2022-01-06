@@ -649,16 +649,16 @@
             this.requiresVersion = '2.1.0';
         },
         setConfig: function (config) {
-            var _a, _b, _c;
+            var _a, _b;
             var result = schema.safeParse(config);
             this.has_config_error = !result.success;
             if (result.success) {
                 this.config = result.data;
-                (_b = (_a = this.logger).setLogLevel) === null || _b === void 0 ? void 0 : _b.call(_a, (_c = this.config.logLevel) !== null && _c !== void 0 ? _c : 'ERROR');
+                (_b = (_a = this.logger).setLogLevel) === null || _b === void 0 ? void 0 : _b.call(_a, this.config.logLevel);
             }
             else {
-                for (var _i = 0, _d = result.error.errors; _i < _d.length; _i++) {
-                    var ze = _d[_i];
+                for (var _i = 0, _c = result.error.errors; _i < _c.length; _i++) {
+                    var ze = _c[_i];
                     var message = "'".concat(ze.path, "': ").concat(ze.message);
                     this.config_errors.push(message);
                     this.logger.error("Configuration error '".concat(ze.code, "' in option ").concat(message));

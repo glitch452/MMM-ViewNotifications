@@ -1,11 +1,11 @@
 import { ZodSchema } from 'zod';
 import MmmLogger from './MmmLogger';
 
-interface MinimumConfig {
+export interface MinimumConfig {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  logLevel?: Module.LoggerLevel;
-  // [x: string]: unknown;
+  logLevel: Module.LoggerLevel;
 }
+
 type This = Module.ModulePropertiesExt<MinimumConfig>;
 
 export const generateBase = <O extends MinimumConfig, D, I>(
@@ -33,7 +33,7 @@ export const generateBase = <O extends MinimumConfig, D, I>(
 
     if (result.success) {
       this.config = result.data;
-      this.logger.setLogLevel?.(this.config.logLevel ?? 'ERROR');
+      this.logger.setLogLevel?.(this.config.logLevel);
     } else {
       for (const ze of result.error.errors) {
         const message = `'${ze.path}': ${ze.message}`;

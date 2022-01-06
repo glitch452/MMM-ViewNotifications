@@ -37,7 +37,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -73,7 +73,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -103,7 +103,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -133,7 +133,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -157,7 +157,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -187,7 +187,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -217,7 +217,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -247,7 +247,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -277,7 +277,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -307,7 +307,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 
@@ -343,7 +343,7 @@ describe('ModuleConfig', () => {
     it('should pass with no value provided (and return a default)', () => {
       const actual = schema.safeParse(default_config);
       expect(actual.success).to.be.true;
-      expect(actual.success && actual.data).ownProperty(property);
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
   });
 });

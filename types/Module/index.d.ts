@@ -51,6 +51,11 @@ declare namespace Module {
   interface ModulePropertiesExt<T> extends ModuleProperties<T> {
     // Add the index field to the module data definition
     readonly data: ModuleData;
+    notificationReceived: (
+      notification: string,
+      payload: Notification['payload'],
+      sender?: ModuleProperties<unknown>,
+    ) => void;
   }
 
   const enum LoggerLevels {
