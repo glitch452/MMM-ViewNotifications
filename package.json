@@ -26,7 +26,7 @@
     "build": "rollup -c",
     "watch": "npm run build -- --watch",
     "format": "prettier --write .",
-    "type": "tsc --noEmit -p tsconfig.exclude.json",
+    "type": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint '*/**/*.{js,ts}' --cache --report-unused-disable-directives --fix",
     "lint-f": "eslint '*/**/*.{js,ts}' --report-unused-disable-directives --fix",
     "test": "nyc mocha -r ts-node/register -r tsconfig-paths/register src/**/*.spec.ts",
@@ -70,7 +70,7 @@
   },
   "lint-staged": {
     "*.{json,yaml,yml,md}": "prettier --write",
-    "*.{js,ts}": "eslint --cache --fix"
+    "*.{ts}": "eslint --cache --fix"
   },
   "nyc": {
     "all": true,
