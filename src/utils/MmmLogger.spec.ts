@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon, { SinonSandbox } from 'sinon';
 import MmmLogger from './MmmLogger';
 import Log from 'logger';
-import { ModuleConfig } from './ModuleConfig';
+import { ModuleConfig } from '../ModuleConfig';
 
 describe('MmmLogger', () => {
   let logger: MmmLogger;

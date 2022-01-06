@@ -1,16 +1,25 @@
-import { ModuleConfig, module_config_schema } from './ModuleConfig';
+import { ZodSchema } from 'zod';
 import MmmLogger from './MmmLogger';
 
-type This = Module.ModuleProperties<ModuleConfig>;
+interface MinimumConfig {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  logLevel?: Module.LoggerLevel;
+  // [x: string]: unknown;
+}
+type This = Module.ModulePropertiesExt<MinimumConfig>;
 
-const MMM_BASE: Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceived'> = {
+export const generateBase = <O extends MinimumConfig, D, I>(
+  schema: ZodSchema<O, D, I>,
+  logger?: Module.Logger,
+): Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceived'> => ({
   /**
    * Initialize standard and module specific fields
    */
   init(this: This) {
     this.has_config_error = false;
     this.config_errors = [];
-    this.logger = new MmmLogger(this);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    this.logger = logger ?? new MmmLogger(this);
     this.requiresVersion = '2.1.0';
   },
 
@@ -19,12 +28,12 @@ const MMM_BASE: Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceive
    * @param config (object) The user specified configuration options
    */
   setConfig(this: This, config: unknown): void {
-    const result = module_config_schema.safeParse(config);
+    const result = schema.safeParse(config);
     this.has_config_error = !result.success;
 
     if (result.success) {
       this.config = result.data;
-      this.logger.setLogLevel?.(this.config.logLevel);
+      this.logger.setLogLevel?.(this.config.logLevel ?? 'ERROR');
     } else {
       for (const ze of result.error.errors) {
         const message = `'${ze.path}': ${ze.message}`;
@@ -41,6 +50,4 @@ const MMM_BASE: Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceive
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   notificationReceived() {},
-};
-
-export default MMM_BASE;
+});

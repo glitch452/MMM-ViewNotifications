@@ -1,9 +1,11 @@
 import moment from 'moment';
-import { ModuleConfig } from './ModuleConfig';
-import { replaceAll } from './utils';
+import { ModuleConfig, module_config_schema } from './ModuleConfig';
+import { replaceAll } from './utils/utils';
 import React from 'jsx-dom';
-import LoadingErrors from './LoadingErrors';
-import MMM_BASE from './MMM_BASE';
+import LoadingErrors from './components/LoadingErrors';
+import { generateBase } from './utils/MmmBase';
+
+const MMM_BASE = generateBase(module_config_schema);
 
 Module.register<ModuleConfig>('MMM-ViewNotifications', {
   ...MMM_BASE,

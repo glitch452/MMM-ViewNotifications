@@ -29,9 +29,9 @@
     "type": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint '*/**/*.{js,ts}' --cache --report-unused-disable-directives --fix",
     "lint-f": "eslint '*/**/*.{js,ts}' --report-unused-disable-directives --fix",
-    "test": "nyc mocha -r ts-node/register -r tsconfig-paths/register src/**/*.spec.ts",
-    "test:ci": "nyc mocha --forbid-only --forbid-pending --color -r ts-node/register -r tsconfig-paths/register src/**/*.spec.ts",
-    "test:watch": "mocha -w --watch-files src -r ts-node/register -r tsconfig-paths/register src/**/*.spec.ts"
+    "test": "nyc mocha -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'",
+    "test:ci": "nyc mocha --forbid-only --forbid-pending --color -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'",
+    "test:watch": "mocha -w --watch-files src -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'"
   },
   "dependencies": {
     "jsx-dom": "^8.0.1-beta.4",
