@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { expect } from 'chai';
 import { module_config_schema } from './ModuleConfig';
 

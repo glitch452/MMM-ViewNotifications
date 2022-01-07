@@ -18,7 +18,6 @@ export const generateBase = <O extends MinimumConfig, D, I>(
   init(this: This) {
     this.has_config_error = false;
     this.config_errors = [];
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     this.logger = logger ?? new MmmLogger(this);
     this.requiresVersion = '2.1.0';
   },

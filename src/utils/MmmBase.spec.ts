@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { expect } from 'chai';
 import { z } from 'zod';
 import { generateBase, MinimumConfig } from './MmmBase';

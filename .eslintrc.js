@@ -9,13 +9,15 @@ module.exports = {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,
   },
+  plugins: ['unused-imports'],
   extends: [
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
   rules: {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+    // "@typescript-eslint/explicit-function-return-type": ["off"],
+    // "@typescript-eslint/explicit-module-boundary-types": ["off"],
 
     /**
      * Javascript Rules
@@ -110,15 +112,13 @@ module.exports = {
       },
     ],
     // Keep our code clean one step at a time by not having useless empty constructors!!!
-    '@typescript-eslint/no-useless-constructor': 'off',
+    '@typescript-eslint/no-useless-constructor': 'error',
     // Prefer to use interfaces to define object types i.e. interface Foo { bar, bazz } over type Foo = { bar, bazz };
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
     // Can be dangerous, and inefficient in many cases, so we disallow it.
     '@typescript-eslint/no-dynamic-delete': 'error',
     // Cleans our code up by only letting us do the minimum level of non-null assertions.
     '@typescript-eslint/no-extra-non-null-assertion': 'error',
-    // Inherited, we do not need this as we are modeling with the api.
-    '@typescript-eslint/camelcase': 'off',
     // Always put types for consistency
     '@typescript-eslint/no-inferrable-types': ['error', { ignoreParameters: true }],
     // best practice to have param = someDefaultValue at end of function (use the typescript version of this rule to enable optional support)
@@ -184,9 +184,21 @@ module.exports = {
     // Which version of the variable is it, who knows? Should reduce much confusion!
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
+    // Auto-remove unused imports, Sweet!
+    'unused-imports/no-unused-imports': 'error',
     // Upgrade this from warning to error
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        ignoreRestSiblings: true,
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
     // Don't use classes when it's not necessary (i.e. prefer proper modules over classes with only static members)
     '@typescript-eslint/no-extraneous-class': 'error',
     // Don't add extra words or-else Jon will come at you!
@@ -329,4 +341,13 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-magic-numbers': ['off'],
+        '@typescript-eslint/consistent-type-assertions': ['off'],
+      },
+    },
+  ],
 };

@@ -16,7 +16,7 @@ declare namespace Module {
     index: number;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line unused-imports/no-unused-vars
   interface ModuleProperties<T> {
     // Add module specific fields and methods to the module definition
     last_update: Date;

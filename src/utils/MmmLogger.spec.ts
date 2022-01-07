@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { expect } from 'chai';
 import sinon, { SinonSandbox } from 'sinon';
 import MmmLogger from './MmmLogger';
