@@ -3,8 +3,10 @@ import { z } from 'zod';
 import { MmmBase, MinimumConfig } from './MmmBase';
 import sinon, { SinonSandbox } from 'sinon';
 
+type BaseTesting = Module.ModuleProperties<MinimumConfig>;
+
 describe('MmmBase', () => {
-  let MMM_BASE: Module.ModulePropertiesExt<MinimumConfig>;
+  let MMM_BASE: BaseTesting;
 
   const schema = z.object({
     logLevel: z.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
@@ -12,7 +14,7 @@ describe('MmmBase', () => {
   const sandbox: SinonSandbox = sinon.createSandbox();
 
   beforeEach(() => {
-    MMM_BASE = new MmmBase(schema) as Module.ModulePropertiesExt<MinimumConfig>;
+    MMM_BASE = new MmmBase(schema) as BaseTesting;
   });
 
   afterEach(() => {
@@ -21,7 +23,7 @@ describe('MmmBase', () => {
 
   describe('construction', () => {
     it('should create an MmmBase object using the new keyword', () => {
-      MMM_BASE = new MmmBase(schema) as Module.ModulePropertiesExt<MinimumConfig>;
+      MMM_BASE = new MmmBase(schema) as BaseTesting;
       expect(MMM_BASE).to.haveOwnProperty('init').that.is.a('function');
       expect(MMM_BASE).to.haveOwnProperty('setConfig').that.is.a('function');
       expect(MMM_BASE).to.haveOwnProperty('start').that.is.a('function');
@@ -40,7 +42,7 @@ describe('MmmBase', () => {
 
     it('should set the provided logger', () => {
       const expected = {} as Module.Logger;
-      MMM_BASE = new MmmBase(schema, expected) as Module.ModulePropertiesExt<MinimumConfig>;
+      MMM_BASE = new MmmBase(schema, expected) as BaseTesting;
       MMM_BASE.init();
       const actual = MMM_BASE.logger;
       expect(actual).to.equal(expected);

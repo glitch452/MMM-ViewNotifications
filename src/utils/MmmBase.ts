@@ -6,7 +6,7 @@ export interface MinimumConfig {
   logLevel: Module.LoggerLevel;
 }
 
-type This = Module.ModulePropertiesExt<MinimumConfig>;
+type This = Module.ModuleProperties<MinimumConfig>;
 
 export type MmmBase = Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceived'>;
 

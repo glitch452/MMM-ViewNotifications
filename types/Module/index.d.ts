@@ -1,6 +1,17 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+
+// Type definitions for non-npm package magicmirror-module 2.17.1
+// Project: https://magicmirror.builders/
+// These types were adapted from the following...
+// Definitions by: Jalibu <https://github.com/jalibu>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
 declare namespace Module {
   type RegisterProperties<T> = ThisType<NonNullable<Module.ModuleProperties<T>>> &
     Partial<Module.ModuleProperties<T>>;
+
+  function register<T>(module_name: string, module_properties: RegisterProperties<T>): void;
 
   interface Notification {
     datetime: Date;
@@ -19,7 +30,6 @@ declare namespace Module {
     index: number;
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
   interface ModuleProperties<T> {
     // Add module specific fields and methods to the module definition
     last_update: Date;
@@ -29,36 +39,59 @@ declare namespace Module {
     formatNotification: (n: Notification) => string;
     cleanupNotificationsList: () => void;
 
-    // Add standard fields and methods to the module definition
+    // Add standard non-built-in fields and methods to the module definition
     has_config_error: boolean;
     config_errors: string[];
     logger: Logger;
-    setConfig: (config: unknown) => void;
-    getDom: () => React.ReactNode;
 
-    // Add the index field to the module data definition
+    // Define built-in fields and methods below
+
+    readonly name: string;
+    readonly identifier: string;
+    readonly hidden: boolean;
     readonly data: ModuleData;
+    readonly lockStrings: string[];
+    config: T;
+    defaults: T;
+    requiresVersion: string;
 
-    // Make sender optional
+    setConfig: (config: unknown) => void;
+    init: () => void;
+    loaded: (callback?: () => void) => void;
+    start: () => void;
+    getScripts: () => string[];
+    getStyles: () => string[];
+    getTranslations: () => Record<string, string>;
+    getTemplate: () => string;
+    getTemplateData: () => unknown;
+    getDom: () => React.ReactNode;
+    getHeader: () => string;
     notificationReceived: (
       notification: string,
       payload: Notification['payload'],
       sender?: ModuleProperties<unknown>,
     ) => void;
+    socketNotificationReceived: (notification: string, payload: unknown) => void;
+    suspend: () => void;
+    resume: () => void;
+
+    // Instance methods
+    readonly file: (filename: string) => string;
+    readonly updateDom: (speed?: number) => void;
+    readonly sendNotification: (notification: string, payload: unknown) => void;
+    readonly sendSocketNotification: (notification: string, payload: unknown) => void;
+    readonly hide: NonNullable<
+      (speed?: number, callback?: () => void, options?: { lockString: string }) => void
+    >;
+    readonly show: (
+      speed?: number,
+      callback?: () => void,
+      options?: { lockString?: string; force?: boolean; onError?: () => void },
+    ) => void;
+    readonly translate: (identifier: string, variables?: unknown) => string;
 
     // Make entries in the module unknown unless defined here
     [key: string]: unknown;
-  }
-
-  // This is required for ts-node to resolve the type properly when testing with Mocha
-  interface ModulePropertiesExt<T> extends ModuleProperties<T> {
-    // Add the index field to the module data definition
-    readonly data: ModuleData;
-    notificationReceived: (
-      notification: string,
-      payload: Notification['payload'],
-      sender?: ModuleProperties<unknown>,
-    ) => void;
   }
 
   const enum LoggerLevels {
@@ -80,3 +113,53 @@ declare namespace Module {
     setLogLevel?: (level: Module.LoggerLevels | Module.LoggerLevel) => void;
   }
 }
+
+declare module 'node_helper' {
+  function create(
+    object: ThisType<NonNullable<NodeHelperModule>> & Partial<NodeHelperModule>,
+  ): void;
+
+  interface NodeHelperModule {
+    readonly name: string;
+    readonly path: string;
+    readonly expressApp: unknown;
+    readonly io: unknown;
+    readonly requiresVersion: string;
+
+    // Overridable methods
+    init: () => void;
+    start: () => void;
+    stop: () => void;
+    socketNotificationReceived: (notification: string, payload: unknown) => void;
+
+    sendSocketNotification: (notification: string, payload: unknown) => void;
+    [key: string]: unknown;
+  }
+}
+
+declare module 'logger' {
+  function info(message?: unknown, ...optionalParams: unknown[]): void;
+  function log(message?: unknown, ...optionalParams: unknown[]): void;
+  function error(message?: unknown, ...optionalParams: unknown[]): void;
+  function warn(message?: unknown, ...optionalParams: unknown[]): void;
+  function group(groupTitle?: string, ...optionalParams: unknown[]): void;
+  function groupCollapsed(groupTitle?: string, ...optionalParams: unknown[]): void;
+  function groupEnd(): void;
+  function time(timerName?: string): void;
+  function timeEnd(timerName?: string): void;
+  function timeStamp(timerName?: string): void;
+}
+
+declare const config: {
+  address: string;
+  customCss: string;
+  electronOptions: unknown;
+  ipWhitelist: string[];
+  language: string;
+  locale: string;
+  modules: unknown[];
+  port: number;
+  timeFormat: 12 | 24;
+  units: 'metric' | 'imperial';
+  zoom: number;
+};

@@ -34,7 +34,7 @@
     "test:watch": "mocha -w --watch-files src -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'"
   },
   "dependencies": {
-    "jsx-dom": "^8.0.1-beta.4",
+    "jsx-dom-cjs": "^8.0.1-beta.4",
     "zod": "^3.11.6"
   },
   "devDependencies": {
@@ -43,7 +43,6 @@
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/chai": "^4.3.0",
     "@types/chai-as-promised": "^7.1.4",
-    "@types/magicmirror-module": "^2.16.1",
     "@types/mocha": "^9.0.0",
     "@types/sinon": "^10.0.6",
     "@typescript-eslint/eslint-plugin": "^5.8.1",

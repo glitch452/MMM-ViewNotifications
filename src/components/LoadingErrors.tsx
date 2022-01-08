@@ -1,4 +1,4 @@
-import React from 'jsx-dom';
+import React from 'jsx-dom-cjs';
 
 export interface LoadingErrorsProps {
   error_list: string[];

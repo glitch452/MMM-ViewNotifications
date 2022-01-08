@@ -23,7 +23,7 @@ export default class MmmLogger implements Module.Logger {
   /**
    * The module properties, used to inject the module name into the logs.
    */
-  private readonly _properties: Module.ModulePropertiesExt<unknown>;
+  private readonly _properties: Module.ModuleProperties<unknown>;
 
   /**
    * The module properties, used to inject the module name into the logs.
@@ -44,7 +44,7 @@ export default class MmmLogger implements Module.Logger {
    * @param transport The underlying logger where the logs are sent.
    */
   constructor(
-    properties: Module.ModulePropertiesExt<unknown>,
+    properties: Module.ModuleProperties<unknown>,
     level: Module.LoggerLevels | Module.LoggerLevel = Module.LoggerLevels.ERROR,
     transport: typeof Log = Log,
   ) {

@@ -4,16 +4,18 @@ import MmmLogger from './MmmLogger';
 import Log from 'logger';
 import { ModuleConfig } from '../ModuleConfig';
 
+type ModulePropertiesTesting = Module.ModuleProperties<ModuleConfig>;
+
 describe('MmmLogger', () => {
   let logger: MmmLogger;
   const sandbox: SinonSandbox = sinon.createSandbox();
 
-  const mock_module_properties: Module.ModulePropertiesExt<ModuleConfig> = {
+  const mock_module_properties: ModulePropertiesTesting = {
     name: 'MMM-TestMock',
     data: {
       index: 1,
     },
-  } as unknown as Module.ModulePropertiesExt<ModuleConfig>;
+  } as unknown as ModulePropertiesTesting;
 
   beforeEach(() => {
     logger = new MmmLogger(mock_module_properties);

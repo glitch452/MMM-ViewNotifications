@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import { replaceAll } from './utils/utils';
-import React from 'jsx-dom';
+import React from 'jsx-dom-cjs';
 import LoadingErrors from './components/LoadingErrors';
 import { MmmBase } from './utils/MmmBase';
 
