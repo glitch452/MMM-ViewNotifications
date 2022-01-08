@@ -3,16 +3,13 @@ import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import { replaceAll } from './utils/utils';
 import React from 'jsx-dom';
 import LoadingErrors from './components/LoadingErrors';
-import { generateBase } from './utils/MmmBase';
+import { MmmBase } from './utils/MmmBase';
 
-const MMM_BASE = generateBase(module_config_schema);
+const MMM_BASE = new MmmBase(module_config_schema);
 
-Module.register<ModuleConfig>('MMM-ViewNotifications', {
+export const MODULE: Module.RegisterProperties<ModuleConfig> = {
   ...MMM_BASE,
 
-  /**
-   * Initialize standard and module specific fields
-   */
   init() {
     // Call the init from the base object
     MMM_BASE.init.call(this);
@@ -171,4 +168,6 @@ Module.register<ModuleConfig>('MMM-ViewNotifications', {
       </div>
     );
   },
-});
+};
+
+Module.register<ModuleConfig>('MMM-ViewNotifications', MODULE);

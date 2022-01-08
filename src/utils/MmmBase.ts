@@ -8,25 +8,33 @@ export interface MinimumConfig {
 
 type This = Module.ModulePropertiesExt<MinimumConfig>;
 
-export const generateBase = <O extends MinimumConfig, D, I>(
+export type MmmBase = Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceived'>;
+
+export interface MmmBaseConstructor {
+  new <O extends MinimumConfig, D, I>(schema: ZodSchema<O, D, I>, logger?: Module.Logger): MmmBase;
+}
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/naming-convention
+export const MmmBase = function <O extends MinimumConfig, D, I>(
+  this: This,
   schema: ZodSchema<O, D, I>,
   logger?: Module.Logger,
-): Pick<This, 'init' | 'setConfig' | 'start' | 'notificationReceived'> => ({
+) {
   /**
    * Initialize standard and module specific fields
    */
-  init(this: This) {
+  this.init = function (this: This) {
     this.has_config_error = false;
     this.config_errors = [];
     this.logger = logger ?? new MmmLogger(this);
     this.requiresVersion = '2.1.0';
-  },
+  };
 
   /**
    * Override the setConfig function to use zod for parsing the configuration values
    * @param config (object) The user specified configuration options
    */
-  setConfig(this: This, config: unknown): void {
+  this.setConfig = function (this: This, config: unknown): void {
     const result = schema.safeParse(config);
     this.has_config_error = !result.success;
 
@@ -40,13 +48,13 @@ export const generateBase = <O extends MinimumConfig, D, I>(
         this.logger.error(`Configuration error '${ze.code}' in option ${message}`);
       }
     }
-  },
+  };
 
-  start(this: This) {
+  this.start = function (this: This) {
     this.logger.debug(`start(): this.data: ${JSON.stringify(this.data)}`);
     this.logger.debug(`start(): this.config: ${JSON.stringify(this.config)}`);
-  },
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  notificationReceived() {},
-});
+  this.notificationReceived = function () {};
+} as unknown as MmmBaseConstructor;

@@ -1,4 +1,7 @@
 declare namespace Module {
+  type RegisterProperties<T> = ThisType<NonNullable<Module.ModuleProperties<T>>> &
+    Partial<Module.ModuleProperties<T>>;
+
   interface Notification {
     datetime: Date;
     timeout: Date;
