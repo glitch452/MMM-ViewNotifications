@@ -2,7 +2,7 @@ import moment from 'moment';
 import { ModuleConfig, module_config_schema } from './ModuleConfig';
 import { replaceAll } from './utils/utils';
 import React from 'jsx-dom-cjs';
-import LoadingErrors from './components/LoadingErrors';
+import ErrorList from './components/ErrorList';
 import { MmmBase } from './utils/MmmBase';
 
 const MODULE_NAME = 'MMM-ViewNotifications';
@@ -149,7 +149,7 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
 
   getDom(): React.ReactNode {
     if (this.has_config_error) {
-      return <LoadingErrors error_list={this.config_errors} />;
+      return <ErrorList title="Configuration error!" error_list={this.config_errors} />;
     }
 
     return (

@@ -680,13 +680,14 @@
 
     var React = /*@__PURE__*/getDefaultExportFromCjs(jsxDomCjs);
 
-    var LoadingErrors = function (_a) {
-        var error_list = _a.error_list;
+    var ErrorList = function (_a) {
+        var title = _a.title, error_list = _a.error_list;
         return (React.createElement("div", { className: "loading small" },
-            "Configuration error!",
-            error_list.map(function (e) { return (React.createElement(React.Fragment, null,
-                React.createElement("br", null),
-                e)); })));
+            title,
+            title && error_list.length > 0 && React.createElement("br", null),
+            error_list.map(function (e, i) { return (React.createElement(React.Fragment, null,
+                e,
+                i !== error_list.length - 1 && React.createElement("br", null))); })));
     };
 
     var MmmLogger = (function () {
@@ -898,7 +899,7 @@
         }, getDom: function () {
             var _this = this;
             if (this.has_config_error) {
-                return React.createElement(LoadingErrors, { error_list: this.config_errors });
+                return React.createElement(ErrorList, { title: "Configuration error!", error_list: this.config_errors });
             }
             return (React.createElement("div", { className: "small" },
                 React.createElement("ul", { className: "fa-ul" }, this.notifications.map(function (n) {

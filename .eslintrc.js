@@ -11,13 +11,24 @@ module.exports = {
   },
   plugins: ['unused-imports'],
   extends: [
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
+  settings: {
+    react: {
+      version: '16',
+    },
+  },
   rules: {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // "@typescript-eslint/explicit-function-return-type": ["off"],
     // "@typescript-eslint/explicit-module-boundary-types": ["off"],
+
+    /**
+     * Adjust react rules for JSX to DOM
+     */
+    'react/jsx-key': 'off',
 
     /**
      * Javascript Rules
@@ -246,6 +257,14 @@ module.exports = {
         format: ['strictCamelCase'],
         types: ['function'], // To scope 'parameter', 'classProperty', 'typeProperty' and 'variable'
         filter: { regex: 'toJSON', match: false },
+      },
+      // Except Top Level functions, which can also use StrictPascalCase for JSX/React components
+      {
+        selector: ['function', 'variable'],
+        modifiers: ['global'],
+        format: ['strictCamelCase', 'StrictPascalCase'],
+        types: ['function'], // To scope 'variable'
+        filter: { regex: '.+', match: true }, // Required to take precedence over other rules
       },
       // Unused function parameters must begin with an underscore
       {

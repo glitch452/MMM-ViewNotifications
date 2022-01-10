@@ -53,6 +53,7 @@
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "faker": "^5.5.3",
     "jsdom": "^19.0.0",

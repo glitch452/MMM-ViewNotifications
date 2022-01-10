@@ -520,10 +520,8 @@ describe('MMM-ViewNotifications', () => {
 
     it('should render no notifications', () => {
       const dom_objects = test_module.getDom();
-      dom.window.document.body.appendChild(dom_objects);
-      const actual = dom.serialize();
-      const expected =
-        '<!DOCTYPE html><html><head></head><body><div class="small"><ul class="fa-ul"></ul></div></body></html>';
+      const actual = dom_objects.outerHTML;
+      const expected = '<div class="small"><ul class="fa-ul"></ul></div>';
 
       expect(actual).to.equal(expected);
     });
@@ -531,10 +529,9 @@ describe('MMM-ViewNotifications', () => {
     it('should render one notification', () => {
       test_module.notifications = [NOTIFICATION_OBJ];
       const dom_objects = test_module.getDom();
-      dom.window.document.body.appendChild(dom_objects);
-      const actual = dom.serialize();
+      const actual = dom_objects.outerHTML;
       const expected =
-        '<!DOCTYPE html><html><head></head><body><div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-bullhorn"></span>13:00:00: "test-module" sent "TEST_NOTIFICATION"</li></ul></div></body></html>';
+        '<div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-bullhorn"></span>13:00:00: "test-module" sent "TEST_NOTIFICATION"</li></ul></div>';
 
       expect(actual).to.equal(expected);
     });
@@ -543,10 +540,9 @@ describe('MMM-ViewNotifications', () => {
       test_module.notifications = [NOTIFICATION_OBJ];
       test_module.setConfig({ ...DEFAULT_CONFIG, icons: { [test_module.name]: 'test-icon' } });
       const dom_objects = test_module.getDom();
-      dom.window.document.body.appendChild(dom_objects);
-      const actual = dom.serialize();
+      const actual = dom_objects.outerHTML;
       const expected =
-        '<!DOCTYPE html><html><head></head><body><div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-test-icon"></span>13:00:00: "test-module" sent "TEST_NOTIFICATION"</li></ul></div></body></html>';
+        '<div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-test-icon"></span>13:00:00: "test-module" sent "TEST_NOTIFICATION"</li></ul></div>';
 
       expect(actual).to.equal(expected);
     });
@@ -555,9 +551,8 @@ describe('MMM-ViewNotifications', () => {
       sandbox.stub(test_module.logger, 'error').returns(undefined);
       test_module.setConfig({ ...DEFAULT_CONFIG, timeout: -1 });
       const dom_objects = test_module.getDom();
-      dom.window.document.body.appendChild(dom_objects);
-      const actual = dom.serialize();
-      const expected = `<!DOCTYPE html><html><head></head><body><div class="loading small">Configuration error!<br>'timeout': Value should be greater than or equal to 0</div></body></html>`;
+      const actual = dom_objects.outerHTML;
+      const expected = `<div class="loading small">Configuration error!<br>'timeout': Value should be greater than or equal to 0</div>`;
 
       expect(actual).to.equal(expected);
     });
