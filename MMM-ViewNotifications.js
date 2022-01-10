@@ -10,7 +10,7 @@
  * This file is auto-generated. Do not edit.
  */
 
-(function (moment, Log) {
+(function (exports, moment, Log) {
     'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -85,8 +85,22 @@
         return output;
     }
 
+    function getDefaultExportFromCjs (x) {
+    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+    }
+
+    var jsxDomCjs = {};
+
     /* eslint-disable */
+
+    (function (exports) {
+
+    Object.defineProperty(exports, "__esModule", { value: true });
+
     const keys = Object.keys;
+    function identity(value) {
+      return value
+    }
     function isBoolean(val) {
       return typeof val === "boolean"
     }
@@ -118,6 +132,12 @@
       for (const key of keys(value)) {
         fn(value[key], key);
       }
+    }
+
+    function createRef() {
+      return Object.seal({
+        current: null,
+      })
     }
     function isRef(maybeRef) {
       return isObject(maybeRef) && "current" in maybeRef
@@ -258,6 +278,9 @@
     };
     const nonPresentationSVGAttributes =
       /^(a(ll|t|u)|base[FP]|c(al|lipPathU|on)|di|ed|ex|filter[RU]|g(lyphR|r)|ke|l(en|im)|ma(rker[HUW]|s)|n|pat|pr|point[^e]|re[^n]|s[puy]|st[^or]|ta|textL|vi|xC|y|z)/;
+    function createFactory(tag) {
+      return createElement.bind(null, tag)
+    }
     function Fragment(attr) {
       const fragment = document.createDocumentFragment();
       appendChild(attr.children, fragment);
@@ -514,6 +537,73 @@
       return node
     }
 
+    function useText(initialValue) {
+      const text = new Text();
+      Object.defineProperty(text, "toString", {
+        value() {
+          return this.textContent
+        },
+      });
+
+      function setText(value) {
+        text.textContent = value;
+      }
+
+      if (initialValue != null) {
+        setText(initialValue);
+      }
+
+      return [text, setText]
+    }
+    function useClassList(initialValue) {
+      const div = document.createElement("div");
+
+      if (initialValue != null) {
+        div.className = className(initialValue);
+      }
+
+      let list = div.classList;
+
+      function ClassList(value) {
+        value.setAttribute("class", list.value);
+        list = value.classList;
+      }
+
+      Object.defineProperties(
+        ClassList,
+        Object.getOwnPropertyDescriptors({
+          get size() {
+            return list.length
+          },
+
+          get value() {
+            return list.value
+          },
+
+          add(...tokens) {
+            list.add(...tokens);
+          },
+
+          remove(...tokens) {
+            list.remove(...tokens);
+          },
+
+          toggle(token, force) {
+            list.toggle(token, force);
+          },
+
+          contains(token) {
+            return list.contains(token)
+          },
+        })
+      );
+      return ClassList
+    }
+
+    function useMemo(factory) {
+      return factory()
+    }
+
     const cache = new Map();
 
     const createStyledComponent =
@@ -532,7 +622,7 @@
 
     const baseStyled = customComponent => createStyledComponent(customComponent);
 
-    new Proxy(baseStyled, {
+    const styled = new Proxy(baseStyled, {
       get(_, name) {
         return setIfAbsent(cache, name, () => createStyledComponent(name))
       },
@@ -554,13 +644,48 @@
       createElement,
       Fragment,
     };
+    function preventDefault(event) {
+      event.preventDefault();
+      return event
+    }
+    function stopPropagation(event) {
+      event.stopPropagation();
+      return event
+    }
+
+    exports.Component = Component;
+    exports.Fragment = Fragment;
+    exports.PureComponent = Component;
+    exports.SVGNamespace = SVGNamespace;
+    exports.StrictMode = Fragment;
+    exports.className = className;
+    exports.createElement = createElement;
+    exports.createFactory = createFactory;
+    exports.createRef = createRef;
+    exports["default"] = index;
+    exports.h = createElement;
+    exports.isRef = isRef;
+    exports.jsx = jsx;
+    exports.jsxs = jsx;
+    exports.memo = identity;
+    exports.preventDefault = preventDefault;
+    exports.stopPropagation = stopPropagation;
+    exports.styled = styled;
+    exports.useCallback = identity;
+    exports.useClassList = useClassList;
+    exports.useMemo = useMemo;
+    exports.useRef = createRef;
+    exports.useText = useText;
+    }(jsxDomCjs));
+
+    var React = /*@__PURE__*/getDefaultExportFromCjs(jsxDomCjs);
 
     var LoadingErrors = function (_a) {
         var error_list = _a.error_list;
-        return (index.createElement("div", { className: "loading small" },
+        return (React.createElement("div", { className: "loading small" },
             "Configuration error!",
-            error_list.map(function (e) { return (index.createElement(index.Fragment, null,
-                index.createElement("br", null),
+            error_list.map(function (e) { return (React.createElement(React.Fragment, null,
+                React.createElement("br", null),
                 e)); })));
     };
 
@@ -641,14 +766,14 @@
         return MmmLogger;
     }());
 
-    var generateBase = function (schema, logger) { return ({
-        init: function () {
+    var MmmBase = function (schema, logger) {
+        this.init = function () {
             this.has_config_error = false;
             this.config_errors = [];
             this.logger = logger !== null && logger !== void 0 ? logger : new MmmLogger(this);
             this.requiresVersion = '2.1.0';
-        },
-        setConfig: function (config) {
+        };
+        this.setConfig = function (config) {
             var _a, _b;
             var result = schema.safeParse(config);
             this.has_config_error = !result.success;
@@ -664,66 +789,70 @@
                     this.logger.error("Configuration error '".concat(ze.code, "' in option ").concat(message));
                 }
             }
-        },
-        start: function () {
+        };
+        this.start = function () {
             this.logger.debug("start(): this.data: ".concat(JSON.stringify(this.data)));
             this.logger.debug("start(): this.config: ".concat(JSON.stringify(this.config)));
-        },
-        notificationReceived: function () { },
-    }); };
+        };
+        this.notificationReceived = function () { };
+    };
 
-    var MMM_BASE = generateBase(module_config_schema);
-    Module.register('MMM-ViewNotifications', __assign$1(__assign$1({}, MMM_BASE), { init: function () {
+    var MODULE_NAME = 'MMM-ViewNotifications';
+    var MMM_BASE = new MmmBase(module_config_schema);
+    var MODULE = __assign$1(__assign$1({}, MMM_BASE), { init: function () {
             MMM_BASE.init.call(this);
-            this.last_update = new Date();
             this.notifications = [];
         }, getScripts: function () {
             return ['moment.js'];
         }, getStyles: function () {
-            return ['MMM-ViewNotifications.css', 'font-awesome.css'];
+            return ["".concat(this.name, ".css"), 'font-awesome.css'];
         }, notificationReceived: function (notification, payload, sender) {
-            var _this = this;
             if (this.has_config_error) {
                 return;
             }
             if (sender) {
                 this.logger.debug("notificationReceived(): ".concat(notification, " ").concat(JSON.stringify(payload), " ").concat(sender.name));
-                this.last_update = new Date();
-                if (this.config.timeout > 0) {
-                    var timeout_offset_in_ms = 50;
-                    setTimeout(function () {
-                        _this.cleanupNotificationsList();
-                        _this.updateDom();
-                    }, this.config.timeout + timeout_offset_in_ms);
-                }
-                this.addNotification({
-                    datetime: new Date(),
-                    timeout: new Date(new Date().getTime() + this.config.timeout),
+                var datetime = new Date();
+                var notification_was_added = this.maybeAddNotification({
+                    datetime: datetime,
+                    timeout: new Date(datetime.getTime() + this.config.timeout),
                     notification: notification,
                     payload: payload,
                     sender: sender,
                 });
-                this.updateDom();
+                if (notification_was_added) {
+                    this.scheduleNotificationCleanup();
+                    this.updateDom();
+                }
             }
-        }, shouldAddNotification: function (n) {
+        }, scheduleNotificationCleanup: function () {
+            var _this = this;
+            if (this.config.timeout > 0) {
+                var timeout_offset_in_ms = 50;
+                setTimeout(function () {
+                    _this.cleanupNotificationsList();
+                    _this.updateDom();
+                }, this.config.timeout + timeout_offset_in_ms);
+            }
+        }, notificationShouldBeAdded: function (n) {
             var is_excluded = this.config.excludeModules.includes(n.sender.name) ||
                 this.config.excludeNotifications.includes(n.notification);
             if (is_excluded) {
                 return false;
             }
-            var is_name_not_included = this.config.includeModules.length && !this.config.includeModules.includes(n.sender.name);
-            if (is_name_not_included) {
+            var name_is_not_included = this.config.includeModules.length && !this.config.includeModules.includes(n.sender.name);
+            if (name_is_not_included) {
                 return false;
             }
-            var is_notification_not_included = this.config.includeNotifications.length &&
+            var notification_is_not_included = this.config.includeNotifications.length &&
                 !this.config.includeNotifications.includes(n.notification);
-            if (is_notification_not_included) {
+            if (notification_is_not_included) {
                 return false;
             }
             return true;
-        }, addNotification: function (n) {
-            if (!this.shouldAddNotification(n)) {
-                return;
+        }, maybeAddNotification: function (n) {
+            if (!this.notificationShouldBeAdded(n)) {
+                return false;
             }
             var is_maximum_size = this.config.maximum && this.notifications.length === this.config.maximum;
             if (this.config.newestOnTop) {
@@ -738,10 +867,8 @@
                     this.notifications.shift();
                 }
             }
+            return true;
         }, cleanupNotificationsList: function () {
-            if (!this.notifications.length) {
-                return;
-            }
             var now = new Date();
             this.notifications = this.notifications.filter(function (n) { return now < n.timeout; });
         }, formatNotification: function (n) {
@@ -771,20 +898,25 @@
         }, getDom: function () {
             var _this = this;
             if (this.has_config_error) {
-                return index.createElement(LoadingErrors, { error_list: this.config_errors });
+                return React.createElement(LoadingErrors, { error_list: this.config_errors });
             }
-            var now = new Date();
-            return (index.createElement("div", { className: "small" },
-                index.createElement("ul", { className: "fa-ul" }, this.notifications
-                    .filter(function (n) { return _this.config.timeout === 0 || now < n.timeout; })
-                    .map(function (n) {
+            return (React.createElement("div", { className: "small" },
+                React.createElement("ul", { className: "fa-ul" }, this.notifications.map(function (n) {
                     var icon_name = _this.config.icons[n.sender.name]
                         ? _this.config.icons[n.sender.name]
                         : _this.config.defaultIcon;
-                    return (index.createElement("li", null,
-                        index.createElement("span", { className: "fa-li fa fa-".concat(icon_name) }),
+                    return (React.createElement("li", null,
+                        React.createElement("span", { className: "fa-li fa fa-".concat(icon_name) }),
                         _this.formatNotification(n)));
                 }))));
-        } }));
+        } });
+    Module.register(MODULE_NAME, MODULE);
 
-})(moment, Log);
+    exports.MMM_BASE = MMM_BASE;
+    exports.MODULE = MODULE;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+    return exports;
+
+})({}, moment, Log);

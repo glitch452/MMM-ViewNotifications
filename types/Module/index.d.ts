@@ -32,12 +32,12 @@ declare namespace Module {
 
   interface ModuleProperties<T> {
     // Add module specific fields and methods to the module definition
-    last_update: Date;
     notifications: Notification[];
-    addNotification: (n: Notification) => void;
-    shouldAddNotification: (n: Module.Notification) => boolean;
+    maybeAddNotification: (n: Notification) => boolean;
+    notificationShouldBeAdded: (n: Module.Notification) => boolean;
     formatNotification: (n: Notification) => string;
     cleanupNotificationsList: () => void;
+    scheduleNotificationCleanup: () => void;
 
     // Add standard non-built-in fields and methods to the module definition
     has_config_error: boolean;

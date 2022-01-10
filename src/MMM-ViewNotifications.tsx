@@ -5,7 +5,9 @@ import React from 'jsx-dom-cjs';
 import LoadingErrors from './components/LoadingErrors';
 import { MmmBase } from './utils/MmmBase';
 
-const MMM_BASE = new MmmBase(module_config_schema);
+const MODULE_NAME = 'MMM-ViewNotifications';
+
+export const MMM_BASE = new MmmBase(module_config_schema);
 
 export const MODULE: Module.RegisterProperties<ModuleConfig> = {
   ...MMM_BASE,
@@ -14,7 +16,6 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
     // Call the init from the base object
     MMM_BASE.init.call(this);
     // Set module specific fields
-    this.last_update = new Date();
     this.notifications = [];
   },
 
@@ -23,7 +24,7 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
   },
 
   getStyles() {
-    return ['MMM-ViewNotifications.css', 'font-awesome.css'];
+    return [`${this.name}.css`, 'font-awesome.css'];
   },
 
   notificationReceived(
@@ -34,35 +35,40 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
     if (this.has_config_error) {
       return;
     }
-    // Check if the notification is coming from another module and not from MM itself
+    // Only process notifications coming from another module and not from MM itself
     if (sender) {
       this.logger.debug(
         `notificationReceived(): ${notification} ${JSON.stringify(payload)} ${sender.name}`,
       );
 
-      this.last_update = new Date();
-
-      if (this.config.timeout > 0) {
-        // Add a little time to make sure the current one has expired
-        const timeout_offset_in_ms = 50;
-        setTimeout(() => {
-          this.cleanupNotificationsList();
-          this.updateDom();
-        }, this.config.timeout + timeout_offset_in_ms);
-      }
-
-      this.addNotification({
-        datetime: new Date(),
-        timeout: new Date(new Date().getTime() + this.config.timeout),
+      const datetime = new Date();
+      const notification_was_added = this.maybeAddNotification({
+        datetime,
+        timeout: new Date(datetime.getTime() + this.config.timeout),
         notification,
         payload,
         sender,
       });
-      this.updateDom();
+
+      if (notification_was_added) {
+        this.scheduleNotificationCleanup();
+        this.updateDom();
+      }
     }
   },
 
-  shouldAddNotification(n: Module.Notification): boolean {
+  scheduleNotificationCleanup(): void {
+    if (this.config.timeout > 0) {
+      // Add a little time to make sure the current notification has expired
+      const timeout_offset_in_ms = 50;
+      setTimeout(() => {
+        this.cleanupNotificationsList();
+        this.updateDom();
+      }, this.config.timeout + timeout_offset_in_ms);
+    }
+  },
+
+  notificationShouldBeAdded(n: Module.Notification): boolean {
     const is_excluded =
       this.config.excludeModules.includes(n.sender.name) ||
       this.config.excludeNotifications.includes(n.notification);
@@ -70,25 +76,25 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
       return false;
     }
 
-    const is_name_not_included =
+    const name_is_not_included =
       this.config.includeModules.length && !this.config.includeModules.includes(n.sender.name);
-    if (is_name_not_included) {
+    if (name_is_not_included) {
       return false;
     }
 
-    const is_notification_not_included =
+    const notification_is_not_included =
       this.config.includeNotifications.length &&
       !this.config.includeNotifications.includes(n.notification);
-    if (is_notification_not_included) {
+    if (notification_is_not_included) {
       return false;
     }
 
     return true;
   },
 
-  addNotification(n: Module.Notification): void {
-    if (!this.shouldAddNotification(n)) {
-      return;
+  maybeAddNotification(n: Module.Notification): boolean {
+    if (!this.notificationShouldBeAdded(n)) {
+      return false;
     }
 
     const is_maximum_size =
@@ -105,12 +111,11 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
         this.notifications.shift();
       }
     }
+
+    return true;
   },
 
   cleanupNotificationsList(): void {
-    if (!this.notifications.length) {
-      return;
-    }
     const now = new Date();
     this.notifications = this.notifications.filter((n) => now < n.timeout);
   },
@@ -147,27 +152,24 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
       return <LoadingErrors error_list={this.config_errors} />;
     }
 
-    const now = new Date();
     return (
       <div className="small">
         <ul className="fa-ul">
-          {this.notifications
-            .filter((n) => this.config.timeout === 0 || now < n.timeout)
-            .map((n) => {
-              const icon_name = this.config.icons[n.sender.name]
-                ? this.config.icons[n.sender.name]
-                : this.config.defaultIcon;
-              return (
-                <li>
-                  <span className={`fa-li fa fa-${icon_name}`} />
-                  {this.formatNotification(n)}
-                </li>
-              );
-            })}
+          {this.notifications.map((n) => {
+            const icon_name = this.config.icons[n.sender.name]
+              ? this.config.icons[n.sender.name]
+              : this.config.defaultIcon;
+            return (
+              <li>
+                <span className={`fa-li fa fa-${icon_name}`} />
+                {this.formatNotification(n)}
+              </li>
+            );
+          })}
         </ul>
       </div>
     );
   },
 };
 
-Module.register<ModuleConfig>('MMM-ViewNotifications', MODULE);
+Module.register<ModuleConfig>(MODULE_NAME, MODULE);

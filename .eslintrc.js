@@ -1,5 +1,5 @@
-var BOOLEAN_PREFIXES_UPPER = ['IS_', 'SHOULD_', 'HAS_', 'CAN_', 'DID_', 'WILL_', 'ALLOW_'];
-var BOOLEAN_PREFIXES_LOWER = BOOLEAN_PREFIXES_UPPER.map((i) => i.toLowerCase());
+var BOOLEAN_REGEX_UPPER = '.*(IS_|WAS_|SHOULD_|HAS_|CAN_|DID_|WILL_|ALLOW_).*';
+var BOOLEAN_REGEX_LOWER = BOOLEAN_REGEX_UPPER.toLowerCase();
 
 module.exports = {
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
@@ -294,7 +294,7 @@ module.exports = {
         format: ['snake_case'],
         modifiers: ['unused'],
         types: ['boolean'],
-        prefix: BOOLEAN_PREFIXES_LOWER,
+        custom: { regex: BOOLEAN_REGEX_LOWER, match: true },
         filter: { regex: '^_?[a-z]', match: true }, // Only test snake_case in this rule to avoid is_MIXED
         leadingUnderscore: 'require',
       },
@@ -303,7 +303,7 @@ module.exports = {
         format: ['UPPER_CASE'],
         modifiers: ['unused'],
         types: ['boolean'],
-        prefix: BOOLEAN_PREFIXES_UPPER,
+        custom: { regex: BOOLEAN_REGEX_UPPER, match: true },
         filter: { regex: '^_?[A-Z]', match: true }, // Only test UPPER_CASE in this rule to avoid IS_mixed
         leadingUnderscore: 'require',
       },
@@ -312,14 +312,14 @@ module.exports = {
         selector: ['variable', 'parameter', 'classProperty', 'typeProperty'],
         format: ['snake_case'],
         types: ['boolean'],
-        prefix: BOOLEAN_PREFIXES_LOWER,
+        custom: { regex: BOOLEAN_REGEX_LOWER, match: true },
         filter: { regex: '^[a-z]', match: true }, // Only test snake_case in this rule to avoid is_MIXED
       },
       {
         selector: ['variable', 'parameter', 'classProperty', 'typeProperty'],
         format: ['UPPER_CASE'],
         types: ['boolean'],
-        prefix: BOOLEAN_PREFIXES_UPPER,
+        custom: { regex: BOOLEAN_REGEX_UPPER, match: true },
         filter: { regex: '^[A-Z]', match: true }, // Only test UPPER_CASE in this rule to avoid IS_mixed
       },
       // Handle top-level UPPER_CASE booleans
@@ -328,16 +328,16 @@ module.exports = {
         format: ['UPPER_CASE'],
         modifiers: ['const', 'global'],
         types: ['boolean'],
+        custom: { regex: BOOLEAN_REGEX_UPPER, match: true },
         filter: { regex: '.+', match: true }, // Required to take precedence over other rules
-        prefix: BOOLEAN_PREFIXES_UPPER,
       },
       {
         selector: ['classProperty', 'typeProperty'],
         format: ['UPPER_CASE'],
         modifiers: ['readonly'],
         types: ['boolean'],
+        custom: { regex: BOOLEAN_REGEX_UPPER, match: true },
         filter: { regex: '.+', match: true }, // Required to take precedence over other rules
-        prefix: BOOLEAN_PREFIXES_UPPER,
       },
     ],
   },

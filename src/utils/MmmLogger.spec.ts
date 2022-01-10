@@ -143,8 +143,7 @@ describe('MmmLogger', () => {
       logger.setLogLevel(Module.LoggerLevels.DEBUG);
       const stub = sandbox.stub(Log, 'info').returns(undefined);
       const time = '20:20:20';
-      const now = new Date(`2020-10-20T${time}`);
-      sandbox.useFakeTimers(now.getTime());
+      sandbox.useFakeTimers(new Date(`2020-10-20T${time}`));
       const message = 'log test';
       const expected = `${mock_module_properties.name}: (${mock_module_properties.data.index})(${time}) ${message}`;
       logger.debug(message);
