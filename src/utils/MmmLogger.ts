@@ -74,18 +74,17 @@ export default class MmmLogger implements Module.Logger {
   }
 
   /**
-   * Used to log messages in the info category.
+   * Used to log messages in the error category.
    * @param message The string to be logged
    */
-  info(message: string) {
-    this.transport.info(this.processMessage(message));
+  error(message: string) {
+    this.transport.error(this.processMessage(message));
   }
 
   /**
    * Used to log messages in the warning category.
    * @param message The string to be logged
    */
-
   warn(message: string) {
     if (this._level >= Module.LoggerLevels.WARN) {
       this.transport.warn(this.processMessage(message));
@@ -93,12 +92,12 @@ export default class MmmLogger implements Module.Logger {
   }
 
   /**
-   * Used to log messages in the error category.
+   * Used to log messages in the info category.
    * @param message The string to be logged
    */
-  error(message: string) {
-    if (this._level >= Module.LoggerLevels.ERROR) {
-      this.transport.error(this.processMessage(message));
+  info(message: string) {
+    if (this._level >= Module.LoggerLevels.INFO) {
+      this.transport.info(this.processMessage(message));
     }
   }
 
@@ -135,15 +134,16 @@ export default class MmmLogger implements Module.Logger {
    */
   private convertLevel(level_name: Module.LoggerLevel): Module.LoggerLevels {
     switch (level_name) {
-      case 'INFO':
-        return Module.LoggerLevels.INFO;
-      case 'WARN':
-        return Module.LoggerLevels.WARN;
       case 'ERROR':
         return Module.LoggerLevels.ERROR;
+      case 'WARN':
+        return Module.LoggerLevels.WARN;
+      case 'INFO':
+        return Module.LoggerLevels.INFO;
       case 'DEBUG':
         return Module.LoggerLevels.DEBUG;
       default:
+        const _: never = level_name;
         throw new Error('Invalid Logger Level');
     }
   }

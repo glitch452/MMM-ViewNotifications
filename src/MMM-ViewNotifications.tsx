@@ -38,7 +38,9 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
     // Only process notifications coming from another module and not from MM itself
     if (sender) {
       this.logger.debug(
-        `notificationReceived(): ${notification} ${JSON.stringify(payload)} ${sender.name}`,
+        `notificationReceived(): from '${sender.name}': '${notification}' = ${JSON.stringify(
+          payload,
+        )}`,
       );
 
       const datetime = new Date();

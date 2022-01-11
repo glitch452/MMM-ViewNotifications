@@ -66,7 +66,7 @@
         includeNotifications: external.string().array().default([]),
         excludeNotifications: external.string().array().default([]),
         format: external.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
-        logLevel: external.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
+        logLevel: external.enum(['ERROR', 'WARN', 'INFO', 'DEBUG']).default('ERROR'),
     });
 
     function replaceAll(input, find, replace) {
@@ -692,9 +692,9 @@
 
     var MmmLogger = (function () {
         function MmmLogger(properties, level, transport) {
-            if (level === void 0) { level = 2; }
+            if (level === void 0) { level = 0; }
             if (transport === void 0) { transport = Log__default["default"]; }
-            this._level = 2;
+            this._level = 0;
             this._properties = properties;
             this.setLogLevel(level);
             this.transport = transport;
@@ -724,17 +724,17 @@
         MmmLogger.prototype.log = function (message) {
             this.transport.log(this.processMessage(message));
         };
-        MmmLogger.prototype.info = function (message) {
-            this.transport.info(this.processMessage(message));
+        MmmLogger.prototype.error = function (message) {
+            this.transport.error(this.processMessage(message));
         };
         MmmLogger.prototype.warn = function (message) {
             if (this._level >= 1) {
                 this.transport.warn(this.processMessage(message));
             }
         };
-        MmmLogger.prototype.error = function (message) {
+        MmmLogger.prototype.info = function (message) {
             if (this._level >= 2) {
-                this.transport.error(this.processMessage(message));
+                this.transport.info(this.processMessage(message));
             }
         };
         MmmLogger.prototype.debug = function (message) {
@@ -752,11 +752,11 @@
         };
         MmmLogger.prototype.convertLevel = function (level_name) {
             switch (level_name) {
-                case 'INFO':
+                case 'ERROR':
                     return 0;
                 case 'WARN':
                     return 1;
-                case 'ERROR':
+                case 'INFO':
                     return 2;
                 case 'DEBUG':
                     return 3;
@@ -812,7 +812,7 @@
                 return;
             }
             if (sender) {
-                this.logger.debug("notificationReceived(): ".concat(notification, " ").concat(JSON.stringify(payload), " ").concat(sender.name));
+                this.logger.debug("notificationReceived(): from '".concat(sender.name, "': '").concat(notification, "' = ").concat(JSON.stringify(payload)));
                 var datetime = new Date();
                 var notification_was_added = this.maybeAddNotification({
                     datetime: datetime,

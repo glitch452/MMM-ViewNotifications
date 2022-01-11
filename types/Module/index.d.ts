@@ -95,20 +95,20 @@ declare namespace Module {
   }
 
   const enum LoggerLevels {
-    INFO,
-    WARN,
     ERROR,
+    WARN,
+    INFO,
     DEBUG,
   }
-  type LoggerLevel = 'INFO' | 'WARN' | 'ERROR' | 'DEBUG';
+  type LoggerLevel = 'ERROR' | 'WARN' | 'INFO' | 'DEBUG';
 
   interface Logger {
     level: LoggerLevels;
     properties: Module.ModuleProperties<unknown>;
     log: (message: string) => void;
-    info: (message: string) => void;
-    warn: (message: string) => void;
     error: (message: string) => void;
+    warn: (message: string) => void;
+    info: (message: string) => void;
     debug: (message: string) => void;
     setLogLevel?: (level: Module.LoggerLevels | Module.LoggerLevel) => void;
   }

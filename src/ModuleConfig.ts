@@ -41,7 +41,7 @@ export const module_config_schema = z.object({
    */
   format: z.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
   // The amount of detail to include in logs
-  logLevel: z.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
+  logLevel: z.enum(['ERROR', 'WARN', 'INFO', 'DEBUG']).default('ERROR'),
 });
 
 export type ModuleConfig = z.infer<typeof module_config_schema>;

@@ -76,6 +76,7 @@ describe('MmmLogger', () => {
       expect(actual).to.equal(expected);
     });
   });
+
   describe('log', () => {
     it('should use the loggers `log` method with the correct format', () => {
       const stub = sandbox.stub(Log, 'log').returns(undefined);
@@ -89,6 +90,7 @@ describe('MmmLogger', () => {
 
   describe('info', () => {
     it('should use the loggers `info` method with the correct format', () => {
+      logger.setLogLevel(Module.LoggerLevels.INFO);
       const stub = sandbox.stub(Log, 'info').returns(undefined);
       const message = 'log test';
       const expected = `${mock_module_properties.name}: ${message}`;
@@ -96,10 +98,20 @@ describe('MmmLogger', () => {
 
       expect(stub.withArgs(expected).callCount).to.equal(1);
     });
+
+    it('should not use the loggers `info` method with a lower log level', () => {
+      logger.setLogLevel(Module.LoggerLevels.ERROR);
+      const stub = sandbox.stub(Log, 'info').returns(undefined);
+      const message = 'log test';
+      logger.info(message);
+
+      expect(stub.callCount).to.equal(0);
+    });
   });
 
   describe('warn', () => {
     it('should use the loggers `warn` method with the correct format', () => {
+      logger.setLogLevel(Module.LoggerLevels.WARN);
       const stub = sandbox.stub(Log, 'warn').returns(undefined);
       const message = 'log test';
       const expected = `${mock_module_properties.name}: ${message}`;
@@ -109,7 +121,7 @@ describe('MmmLogger', () => {
     });
 
     it('should not use the loggers `warn` method with a lower log level', () => {
-      logger.setLogLevel(Module.LoggerLevels.INFO);
+      logger.setLogLevel(Module.LoggerLevels.ERROR);
       const stub = sandbox.stub(Log, 'warn').returns(undefined);
       const message = 'log test';
       logger.warn(message);
@@ -127,19 +139,10 @@ describe('MmmLogger', () => {
 
       expect(stub.withArgs(expected).callCount).to.equal(1);
     });
-
-    it('should not use the loggers `error` method with a lower log level', () => {
-      logger.setLogLevel(Module.LoggerLevels.INFO);
-      const stub = sandbox.stub(Log, 'error').returns(undefined);
-      const message = 'log test';
-      logger.error(message);
-
-      expect(stub.callCount).to.equal(0);
-    });
   });
 
   describe('debug', () => {
-    it('should use the loggers `info` method with the correct format', () => {
+    it('should use the loggers `info` method with the correct format when debug is used', () => {
       logger.setLogLevel(Module.LoggerLevels.DEBUG);
       const stub = sandbox.stub(Log, 'info').returns(undefined);
       const time = '20:20:20';
@@ -151,8 +154,8 @@ describe('MmmLogger', () => {
       expect(stub.withArgs(expected).callCount).to.equal(1);
     });
 
-    it('should not use the loggers `info` method with a lower log level', () => {
-      logger.setLogLevel(Module.LoggerLevels.INFO);
+    it('should not use the loggers `info` method with a lower log level when debug is used', () => {
+      logger.setLogLevel(Module.LoggerLevels.ERROR);
       const stub = sandbox.stub(Log, 'info').returns(undefined);
       const message = 'log test';
       logger.debug(message);
