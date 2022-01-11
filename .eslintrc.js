@@ -171,7 +171,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-non-null-assertion': 'error',
     // No reason to do this, use undefined!
-    '@typescript-eslint/no-invalid-void-type': 'error',
+    '@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
     // Can be overridden if the package has no es6 module support
     '@typescript-eslint/no-require-imports': 'error',
     // Like, it's already a boolean, OKAY!
