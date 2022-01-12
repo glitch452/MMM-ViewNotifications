@@ -40,6 +40,8 @@ export const module_config_schema = z.object({
    * 					using https://momentjs.com/docs/#/displaying/format/ for formatting. Ex: {date|HH:mm}
    */
   format: z.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
+  // The animation speed (in milliseconds) to use when updating the module output, defaults to 0 to disable animations
+  updateAnimationSpeed: z.number().int().min(0).default(0),
   // The amount of detail to include in logs
   logLevel: z.enum(['ERROR', 'WARN', 'INFO', 'DEBUG']).default('ERROR'),
 });

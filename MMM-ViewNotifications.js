@@ -66,6 +66,7 @@
         includeNotifications: external.string().array().default([]),
         excludeNotifications: external.string().array().default([]),
         format: external.string().nonempty().default('{time}: "{module}" sent "{notification}"'),
+        updateAnimationSpeed: external.number().int().min(0).default(0),
         logLevel: external.enum(['ERROR', 'WARN', 'INFO', 'DEBUG']).default('ERROR'),
     });
 
@@ -823,7 +824,7 @@
                 });
                 if (notification_was_added) {
                     this.scheduleNotificationCleanup();
-                    this.updateDom();
+                    this.updateDom(this.config.updateAnimationSpeed);
                 }
             }
         }, scheduleNotificationCleanup: function () {
@@ -832,7 +833,7 @@
                 var timeout_offset_in_ms = 50;
                 setTimeout(function () {
                     _this.cleanupNotificationsList();
-                    _this.updateDom();
+                    _this.updateDom(_this.config.updateAnimationSpeed);
                 }, this.config.timeout + timeout_offset_in_ms);
             }
         }, notificationShouldBeAdded: function (n) {
@@ -894,7 +895,7 @@
                 return React.createElement(ErrorList, { title: "Configuration error!", error_list: this.config_errors });
             }
             var notifications = this.config.newestOnTop
-                ? this.notifications.reverse()
+                ? this.notifications.slice().reverse()
                 : this.notifications;
             return (React.createElement("div", { className: "small" },
                 React.createElement("ul", { className: "fa-ul" }, notifications.map(function (n) {

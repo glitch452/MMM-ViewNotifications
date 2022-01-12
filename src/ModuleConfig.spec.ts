@@ -310,6 +310,42 @@ describe('ModuleConfig', () => {
     });
   });
 
+  describe('updateAnimationSpeed', () => {
+    const property = 'updateAnimationSpeed';
+    it('should pass validation with a valid value', () => {
+      const value = 500;
+      const actual = schema.safeParse(injectDefault(property, value));
+      expect(actual.success).to.be.true;
+      expect(actual.success && actual.data)
+        .ownProperty(property)
+        .equals(value);
+    });
+
+    it('should fail validation with a negative value', () => {
+      const value = -2;
+      const actual = schema.safeParse(injectDefault(property, value));
+      expect(actual.success).to.be.false;
+    });
+
+    it('should fail validation with a non-integer value', () => {
+      const value = 2.5;
+      const actual = schema.safeParse(injectDefault(property, value));
+      expect(actual.success).to.be.false;
+    });
+
+    it('should fail validation with a non-numeric value', () => {
+      const value = 'INVALID';
+      const actual = schema.safeParse(injectDefault(property, value));
+      expect(actual.success).to.be.false;
+    });
+
+    it('should pass with no value provided (and return a default)', () => {
+      const actual = schema.safeParse(default_config);
+      expect(actual.success).to.be.true;
+      expect(actual.success && actual.data).to.haveOwnProperty(property);
+    });
+  });
+
   describe('logLevel', () => {
     const property = 'logLevel';
     it('should pass validation with a valid value', () => {

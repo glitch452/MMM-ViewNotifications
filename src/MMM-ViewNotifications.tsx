@@ -54,7 +54,7 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
 
       if (notification_was_added) {
         this.scheduleNotificationCleanup();
-        this.updateDom();
+        this.updateDom(this.config.updateAnimationSpeed);
       }
     }
   },
@@ -65,7 +65,7 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
       const timeout_offset_in_ms = 50;
       setTimeout(() => {
         this.cleanupNotificationsList();
-        this.updateDom();
+        this.updateDom(this.config.updateAnimationSpeed);
       }, this.config.timeout + timeout_offset_in_ms);
     }
   },
