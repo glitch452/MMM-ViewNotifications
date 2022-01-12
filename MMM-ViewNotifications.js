@@ -855,18 +855,10 @@
             if (!this.notificationShouldBeAdded(n)) {
                 return false;
             }
-            var is_maximum_size = this.config.maximum && this.notifications.length === this.config.maximum;
-            if (this.config.newestOnTop) {
-                this.notifications.unshift(n);
-                if (is_maximum_size) {
-                    this.notifications.pop();
-                }
-            }
-            else {
-                this.notifications.push(n);
-                if (is_maximum_size) {
-                    this.notifications.shift();
-                }
+            var notification_list_is_full = this.config.maximum && this.notifications.length === this.config.maximum;
+            this.notifications.push(n);
+            if (notification_list_is_full) {
+                this.notifications.shift();
             }
             return true;
         }, cleanupNotificationsList: function () {
@@ -901,8 +893,11 @@
             if (this.has_config_error) {
                 return React.createElement(ErrorList, { title: "Configuration error!", error_list: this.config_errors });
             }
+            var notifications = this.config.newestOnTop
+                ? this.notifications.reverse()
+                : this.notifications;
             return (React.createElement("div", { className: "small" },
-                React.createElement("ul", { className: "fa-ul" }, this.notifications.map(function (n) {
+                React.createElement("ul", { className: "fa-ul" }, notifications.map(function (n) {
                     var icon_name = _this.config.icons[n.sender.name]
                         ? _this.config.icons[n.sender.name]
                         : _this.config.defaultIcon;

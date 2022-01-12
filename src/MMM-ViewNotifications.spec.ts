@@ -51,9 +51,7 @@ describe('MMM-ViewNotifications', () => {
     it('should return an array of strings', () => {
       const actual = test_module.getScripts();
       expect(actual).to.be.an('array').that.is.not.empty;
-      for (const val of actual) {
-        expect(val).to.be.a('string').that.is.not.empty;
-      }
+      expect(actual.every((x) => typeof x === 'string')).to.be.true;
     });
   });
 
@@ -61,9 +59,7 @@ describe('MMM-ViewNotifications', () => {
     it('should return an array of strings', () => {
       const actual = test_module.getStyles();
       expect(actual).to.be.an('array').that.is.not.empty;
-      for (const val of actual) {
-        expect(val).to.be.a('string').that.is.not.empty;
-      }
+      expect(actual.every((x) => typeof x === 'string')).to.be.true;
     });
   });
 
@@ -278,19 +274,7 @@ describe('MMM-ViewNotifications', () => {
       expect(test_module.notifications).to.not.contain(oldest);
     });
 
-    it('should add the newest to the front of the list when newestOnTop is true', () => {
-      test_module.setConfig({ ...DEFAULT_CONFIG, maximum: 2, newestOnTop: true });
-      const newest = { ...NOTIFICATION_OBJ, notification: 'newest' };
-      test_module.maybeAddNotification(NOTIFICATION_OBJ);
-      test_module.maybeAddNotification(NOTIFICATION_OBJ);
-      test_module.maybeAddNotification(NOTIFICATION_OBJ);
-      test_module.maybeAddNotification(newest);
-
-      expect(test_module.notifications).to.be.an('array').with.length(2);
-      expect(test_module.notifications[0]).to.equal(newest);
-    });
-
-    it('should add the newest to the end of the list when newestOnTop is false', () => {
+    it('should add the newest notifications to the end of the list', () => {
       test_module.setConfig({ ...DEFAULT_CONFIG, maximum: 2, newestOnTop: false });
       const newest = { ...NOTIFICATION_OBJ, notification: 'newest' };
       test_module.maybeAddNotification(NOTIFICATION_OBJ);
@@ -348,11 +332,10 @@ describe('MMM-ViewNotifications', () => {
       const now = new Date('2021-01-08T13:00:07');
       sandbox.useFakeTimers(now);
       test_module.cleanupNotificationsList();
+      const actual = test_module.notifications;
 
-      expect(test_module.notifications).to.be.an('array').with.length(2);
-      for (const n of test_module.notifications) {
-        expect(n.timeout >= now);
-      }
+      expect(actual).to.be.an('array').with.length(2);
+      expect(actual.every((x) => x.timeout >= now)).to.be.true;
     });
 
     it('should do nothing if all the notifications are newer than the cutoff', () => {
@@ -386,11 +369,10 @@ describe('MMM-ViewNotifications', () => {
       const now = new Date('2021-01-08T13:00:05');
       sandbox.useFakeTimers(now);
       test_module.cleanupNotificationsList();
+      const actual = test_module.notifications;
 
-      expect(test_module.notifications).to.be.an('array').with.length(4);
-      for (const n of test_module.notifications) {
-        expect(n.timeout >= now);
-      }
+      expect(actual).to.be.an('array').with.length(4);
+      expect(actual.every((x) => x.timeout >= now)).to.be.true;
     });
   });
 
@@ -534,6 +516,36 @@ describe('MMM-ViewNotifications', () => {
         '<div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-bullhorn"></span>13:00:00: "test-module" sent "TEST_NOTIFICATION"</li></ul></div>';
 
       expect(actual).to.equal(expected);
+    });
+
+    it('should render oldest notifications first when newestOnTop is false', () => {
+      test_module.setConfig({ ...DEFAULT_CONFIG, format: '{notification}', newestOnTop: false });
+      const notification_1 = { ...NOTIFICATION_OBJ, notification: '1' };
+      const notification_2 = { ...NOTIFICATION_OBJ, notification: '2' };
+      test_module.notifications = [notification_1, notification_2];
+      const dom_objects = test_module.getDom();
+      const actual = dom_objects.outerHTML;
+      const expected =
+        '<div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-bullhorn"></span>1</li><li><span class="fa-li fa fa-bullhorn"></span>2</li></ul></div>';
+
+      expect(actual).to.equal(expected);
+      expect(test_module.notifications[0]).to.equal(notification_1);
+      expect(test_module.notifications[1]).to.equal(notification_2);
+    });
+
+    it('should render oldest notifications last when newestOnTop is true', () => {
+      test_module.setConfig({ ...DEFAULT_CONFIG, format: '{notification}', newestOnTop: true });
+      const notification_1 = { ...NOTIFICATION_OBJ, notification: '1' };
+      const notification_2 = { ...NOTIFICATION_OBJ, notification: '2' };
+      test_module.notifications = [notification_1, notification_2];
+      const dom_objects = test_module.getDom();
+      const actual = dom_objects.outerHTML;
+      const expected =
+        '<div class="small"><ul class="fa-ul"><li><span class="fa-li fa fa-bullhorn"></span>2</li><li><span class="fa-li fa fa-bullhorn"></span>1</li></ul></div>';
+
+      expect(actual).to.equal(expected);
+      expect(test_module.notifications[0]).to.equal(notification_1);
+      expect(test_module.notifications[1]).to.equal(notification_2);
     });
 
     it('should render the correct icon', () => {

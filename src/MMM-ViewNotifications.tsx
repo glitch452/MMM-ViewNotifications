@@ -99,19 +99,13 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
       return false;
     }
 
-    const is_maximum_size =
+    const notification_list_is_full =
       this.config.maximum && this.notifications.length === this.config.maximum;
 
-    if (this.config.newestOnTop) {
-      this.notifications.unshift(n);
-      if (is_maximum_size) {
-        this.notifications.pop();
-      }
-    } else {
-      this.notifications.push(n);
-      if (is_maximum_size) {
-        this.notifications.shift();
-      }
+    this.notifications.push(n);
+
+    if (notification_list_is_full) {
+      this.notifications.shift();
     }
 
     return true;
@@ -154,10 +148,14 @@ export const MODULE: Module.RegisterProperties<ModuleConfig> = {
       return <ErrorList title="Configuration error!" error_list={this.config_errors} />;
     }
 
+    const notifications = this.config.newestOnTop
+      ? this.notifications.slice().reverse()
+      : this.notifications;
+
     return (
       <div className="small">
         <ul className="fa-ul">
-          {this.notifications.map((n) => {
+          {notifications.map((n) => {
             const icon_name = this.config.icons[n.sender.name]
               ? this.config.icons[n.sender.name]
               : this.config.defaultIcon;
