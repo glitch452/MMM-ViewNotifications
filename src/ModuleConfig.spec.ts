@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { module_config_schema } from './ModuleConfig';
 
+const SCHEMA = module_config_schema;
+const DEFAULT_CONFIG = {};
+
 describe('ModuleConfig', () => {
-  const schema = module_config_schema;
-  const default_config = {};
   const injectDefault = (property: string, value: unknown): Record<string, unknown> => ({
-    ...default_config,
+    ...DEFAULT_CONFIG,
     [property]: value,
   });
 
@@ -14,7 +15,7 @@ describe('ModuleConfig', () => {
     it('should pass validation with a valid value', () => {
       const value = 4.2;
       const expected = 4200;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -23,18 +24,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a negative value', () => {
       const value = -2;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-numeric value', () => {
       const value = 'INVALID';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -44,7 +45,7 @@ describe('ModuleConfig', () => {
     const property = 'maximum';
     it('should pass validation with a valid value', () => {
       const value = 6;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -53,24 +54,24 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a negative value', () => {
       const value = -2;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-integer value', () => {
       const value = 2.5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-numeric value', () => {
       const value = 'INVALID';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -80,7 +81,7 @@ describe('ModuleConfig', () => {
     const property = 'defaultIcon';
     it('should pass validation with a valid value', () => {
       const value = 'VALID';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -89,18 +90,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with an empty string value', () => {
       const value = '';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -110,7 +111,7 @@ describe('ModuleConfig', () => {
     const property = 'icons';
     it('should pass validation with a valid value', () => {
       const value = { test: 'VALID' };
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -119,18 +120,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a non-object value', () => {
       const value: string[] = [];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value on the object', () => {
       const value = { test: 2 };
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -140,7 +141,7 @@ describe('ModuleConfig', () => {
     const property = 'newestOnTop';
     it('should pass validation with a valid value', () => {
       const is_value = false;
-      const actual = schema.safeParse(injectDefault(property, is_value));
+      const actual = SCHEMA.safeParse(injectDefault(property, is_value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -149,12 +150,12 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a non-boolean value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -164,7 +165,7 @@ describe('ModuleConfig', () => {
     const property = 'includeModules';
     it('should pass validation with a valid value', () => {
       const value = ['VALID'];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -173,18 +174,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a non-array value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value in the array', () => {
       const value = [2];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -194,7 +195,7 @@ describe('ModuleConfig', () => {
     const property = 'excludeModules';
     it('should pass validation with a valid value', () => {
       const value = ['VALID'];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -203,18 +204,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a non-array value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value in the array', () => {
       const value = [2];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -224,7 +225,7 @@ describe('ModuleConfig', () => {
     const property = 'includeNotifications';
     it('should pass validation with a valid value', () => {
       const value = ['VALID'];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -233,18 +234,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a non-array value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value in the array', () => {
       const value = [2];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -254,7 +255,7 @@ describe('ModuleConfig', () => {
     const property = 'excludeNotifications';
     it('should pass validation with a valid value', () => {
       const value = ['VALID'];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -263,18 +264,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a non-array value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value in the array', () => {
       const value = [2];
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -284,7 +285,7 @@ describe('ModuleConfig', () => {
     const property = 'format';
     it('should pass validation with a valid value', () => {
       const value = 'VALID';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -293,18 +294,18 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with an empty string value', () => {
       const value = '';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -314,7 +315,7 @@ describe('ModuleConfig', () => {
     const property = 'updateAnimationSpeed';
     it('should pass validation with a valid value', () => {
       const value = 500;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -323,24 +324,24 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with a negative value', () => {
       const value = -2;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-integer value', () => {
       const value = 2.5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-numeric value', () => {
       const value = 'INVALID';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });
@@ -350,7 +351,7 @@ describe('ModuleConfig', () => {
     const property = 'logLevel';
     it('should pass validation with a valid value', () => {
       const value = 'INFO';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data)
         .ownProperty(property)
@@ -359,24 +360,24 @@ describe('ModuleConfig', () => {
 
     it('should fail validation with an empty string value', () => {
       const value = '';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with an invalid string value', () => {
       const value = 'INVALID';
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should fail validation with a non-string value', () => {
       const value = 5;
-      const actual = schema.safeParse(injectDefault(property, value));
+      const actual = SCHEMA.safeParse(injectDefault(property, value));
       expect(actual.success).to.be.false;
     });
 
     it('should pass with no value provided (and return a default)', () => {
-      const actual = schema.safeParse(default_config);
+      const actual = SCHEMA.safeParse(DEFAULT_CONFIG);
       expect(actual.success).to.be.true;
       expect(actual.success && actual.data).to.haveOwnProperty(property);
     });

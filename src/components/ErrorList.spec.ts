@@ -2,11 +2,12 @@ import { JSDOM } from 'jsdom';
 import { expect } from 'chai';
 import ErrorList from './ErrorList';
 
+const WINDOW = global.window;
+const DOCUMENT = global.document;
+const NAVIGATOR = global.navigator;
+
 describe('LoadingErrors', () => {
   let dom: JSDOM;
-  const window = global.window;
-  const document = global.document;
-  const navigator = global.navigator;
 
   beforeEach(() => {
     dom = new JSDOM('<!doctype html><html><body></body></html>');
@@ -16,9 +17,9 @@ describe('LoadingErrors', () => {
   });
 
   afterEach(() => {
-    global.window = window;
-    global.document = document;
-    global.navigator = navigator;
+    global.window = WINDOW;
+    global.document = DOCUMENT;
+    global.navigator = NAVIGATOR;
   });
 
   it('should render with no errors', () => {

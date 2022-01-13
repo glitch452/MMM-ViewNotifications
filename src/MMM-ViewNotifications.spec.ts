@@ -8,19 +8,28 @@ import sinon, { SinonFakeTimers, SinonSandbox, SinonSpy, SinonStub } from 'sinon
 import { MODULE, MMM_BASE } from './MMM-ViewNotifications';
 import { ModuleConfig } from './ModuleConfig';
 
+const NOTIFICATION = 'TEST_NOTIFICATION';
+const PAYLOAD = { foo: 'bar' };
+const DEFAULT_CONFIG = { logLevel: 'DEBUG' };
+const MODULE_NAME = 'test-module';
+
+const WINDOW = global.window;
+const DOCUMENT = global.document;
+const NAVIGATOR = global.navigator;
+
+const sandbox: SinonSandbox = sinon.createSandbox();
+
 describe('MMM-ViewNotifications', () => {
   let test_module: Module.ModuleProperties<ModuleConfig>;
-  const DEFAULT_CONFIG = { logLevel: 'DEBUG' };
-  const name = 'test-module';
   let stubUpdateDom: SinonSpy<[speed?: number | undefined], void>;
-  const notification = 'TEST_NOTIFICATION';
-  const payload = { foo: 'bar' };
-
-  const sandbox: SinonSandbox = sinon.createSandbox();
 
   beforeEach(() => {
     const updateDom = (_time: number) => undefined;
-    test_module = { updateDom, name, ...MODULE } as Module.ModuleProperties<ModuleConfig>;
+    test_module = {
+      updateDom,
+      name: MODULE_NAME,
+      ...MODULE,
+    } as Module.ModuleProperties<ModuleConfig>;
     test_module.init();
     test_module.setConfig(DEFAULT_CONFIG);
     stubUpdateDom = sandbox.spy(test_module, 'updateDom');
@@ -64,8 +73,8 @@ describe('MMM-ViewNotifications', () => {
   });
 
   describe('notificationReceived', () => {
-    const NOTIFICATION = 'TEST_NOTIFICATION';
-    const PAYLOAD = { foo: 'bar' };
+    const notification = 'TEST_NOTIFICATION';
+    const payload = { foo: 'bar' };
 
     beforeEach(() => {
       test_module.has_config_error = false;
@@ -75,14 +84,14 @@ describe('MMM-ViewNotifications', () => {
     it('should do nothing if there is a config error for the module', () => {
       test_module.has_config_error = true;
       const stub = sandbox.stub(test_module, 'maybeAddNotification').returns(false);
-      test_module.notificationReceived(NOTIFICATION, PAYLOAD, test_module);
+      test_module.notificationReceived(notification, payload, test_module);
 
       expect(stub.callCount).to.equal(0);
     });
 
     it('should do nothing if there is no sender', () => {
       const stub = sandbox.stub(test_module, 'maybeAddNotification').returns(false);
-      test_module.notificationReceived(NOTIFICATION, PAYLOAD);
+      test_module.notificationReceived(notification, payload);
 
       expect(stub.callCount).to.equal(0);
     });
@@ -91,7 +100,7 @@ describe('MMM-ViewNotifications', () => {
       const datetime = new Date('2022-01-09T13:00:00');
       sandbox.useFakeTimers(datetime);
       const stubAddNotification = sandbox.stub(test_module, 'maybeAddNotification').returns(false);
-      test_module.notificationReceived(NOTIFICATION, PAYLOAD, test_module);
+      test_module.notificationReceived(notification, payload, test_module);
 
       expect(stubAddNotification.callCount).to.equal(1);
 
@@ -99,8 +108,8 @@ describe('MMM-ViewNotifications', () => {
       const expected = {
         datetime,
         timeout: new Date(datetime.getTime() + test_module.config.timeout),
-        notification: NOTIFICATION,
-        payload: PAYLOAD,
+        notification,
+        payload,
         sender: test_module,
       };
 
@@ -110,7 +119,7 @@ describe('MMM-ViewNotifications', () => {
     it('should schedule a cleanup and update the dom if a new notification was added', () => {
       const stubAddNotification = sandbox.stub(test_module, 'maybeAddNotification').returns(true);
       const stub = sandbox.stub(test_module, 'scheduleNotificationCleanup').returns(undefined);
-      test_module.notificationReceived(NOTIFICATION, PAYLOAD, test_module);
+      test_module.notificationReceived(notification, payload, test_module);
 
       expect(stubAddNotification.callCount).to.equal(1);
       expect(stub.callCount).to.equal(1);
@@ -120,7 +129,7 @@ describe('MMM-ViewNotifications', () => {
     it('should NOT schedule a cleanup and update the dom if a new notification was NOT added', () => {
       const stubAddNotification = sandbox.stub(test_module, 'maybeAddNotification').returns(false);
       const stub = sandbox.stub(test_module, 'scheduleNotificationCleanup').returns(undefined);
-      test_module.notificationReceived(NOTIFICATION, PAYLOAD, test_module);
+      test_module.notificationReceived(notification, payload, test_module);
 
       expect(stubAddNotification.callCount).to.equal(1);
       expect(stub.callCount).to.equal(0);
@@ -165,8 +174,8 @@ describe('MMM-ViewNotifications', () => {
       NOTIFICATION_OBJ = {
         datetime,
         timeout: new Date(datetime.getTime() + test_module.config.timeout),
-        notification,
-        payload,
+        notification: NOTIFICATION,
+        payload: PAYLOAD,
         sender: test_module,
       };
     });
@@ -186,7 +195,7 @@ describe('MMM-ViewNotifications', () => {
     });
 
     it('should return false if the notification is excluded', () => {
-      test_module.setConfig({ ...DEFAULT_CONFIG, excludeNotifications: [notification] });
+      test_module.setConfig({ ...DEFAULT_CONFIG, excludeNotifications: [NOTIFICATION] });
       const is_actual = test_module.notificationShouldBeAdded(NOTIFICATION_OBJ);
 
       expect(is_actual).to.be.false;
@@ -207,14 +216,14 @@ describe('MMM-ViewNotifications', () => {
     });
 
     it('should return true if the sender module is included', () => {
-      test_module.setConfig({ ...DEFAULT_CONFIG, includeModules: [name] });
+      test_module.setConfig({ ...DEFAULT_CONFIG, includeModules: [MODULE_NAME] });
       const is_actual = test_module.notificationShouldBeAdded(NOTIFICATION_OBJ);
 
       expect(is_actual).to.be.true;
     });
 
     it('should return true if the notification is included', () => {
-      test_module.setConfig({ ...DEFAULT_CONFIG, includeNotifications: [notification] });
+      test_module.setConfig({ ...DEFAULT_CONFIG, includeNotifications: [NOTIFICATION] });
       const is_actual = test_module.notificationShouldBeAdded(NOTIFICATION_OBJ);
 
       expect(is_actual).to.be.true;
@@ -230,8 +239,8 @@ describe('MMM-ViewNotifications', () => {
       NOTIFICATION_OBJ = {
         datetime,
         timeout: new Date(datetime.getTime() + test_module.config.timeout),
-        notification,
-        payload,
+        notification: NOTIFICATION,
+        payload: PAYLOAD,
         sender: test_module,
       };
       stubShouldBeAdded = sandbox.stub(test_module, 'notificationShouldBeAdded').returns(true);
@@ -295,8 +304,8 @@ describe('MMM-ViewNotifications', () => {
       NOTIFICATION_OBJ = {
         datetime,
         timeout: new Date(datetime.getTime() + test_module.config.timeout),
-        notification,
-        payload,
+        notification: NOTIFICATION,
+        payload: PAYLOAD,
         sender: test_module,
       };
     });
@@ -376,7 +385,7 @@ describe('MMM-ViewNotifications', () => {
     });
   });
 
-  describe('cleanupNotificationsList', () => {
+  describe('formatNotification', () => {
     let NOTIFICATION_OBJ: Module.Notification;
 
     beforeEach(() => {
@@ -384,8 +393,8 @@ describe('MMM-ViewNotifications', () => {
       NOTIFICATION_OBJ = {
         datetime,
         timeout: new Date(datetime.getTime() + test_module.config.timeout),
-        notification,
-        payload,
+        notification: NOTIFICATION,
+        payload: PAYLOAD,
         sender: test_module,
       };
     });
@@ -393,7 +402,7 @@ describe('MMM-ViewNotifications', () => {
     it('should replace the {notification} tags with the notification', () => {
       const format = 'This is a {notification} for {notification}';
       test_module.setConfig({ ...DEFAULT_CONFIG, format });
-      const expected = `This is a ${notification} for ${notification}`;
+      const expected = `This is a ${NOTIFICATION} for ${NOTIFICATION}`;
       const actual = test_module.formatNotification(NOTIFICATION_OBJ);
       expect(actual).to.equal(expected);
     });
@@ -443,7 +452,7 @@ describe('MMM-ViewNotifications', () => {
     });
 
     it('should replace the {payloadData} using JSON.stringify to format it as a string', () => {
-      const payload_val = JSON.stringify(payload);
+      const payload_val = JSON.stringify(PAYLOAD);
       const format = 'This is a {payloadData} for {payloadData}';
       test_module.setConfig({ ...DEFAULT_CONFIG, format });
       const expected = `This is a ${payload_val} for ${payload_val}`;
@@ -462,7 +471,7 @@ describe('MMM-ViewNotifications', () => {
     });
 
     it('should replace the {payloadList} using with a list of object keys when the payload is not an array', () => {
-      const payload_val = Object.keys(payload).toString();
+      const payload_val = Object.keys(PAYLOAD).toString();
       const format = 'This is a {payloadList} for {payloadList}';
       test_module.setConfig({ ...DEFAULT_CONFIG, format });
       const expected = `This is a ${payload_val} for ${payload_val}`;
@@ -474,9 +483,6 @@ describe('MMM-ViewNotifications', () => {
   describe('getDom', () => {
     let NOTIFICATION_OBJ: Module.Notification;
     let dom: JSDOM;
-    const window = global.window;
-    const document = global.document;
-    const navigator = global.navigator;
 
     beforeEach(() => {
       dom = new JSDOM('<!doctype html><html><body></body></html>');
@@ -488,16 +494,16 @@ describe('MMM-ViewNotifications', () => {
       NOTIFICATION_OBJ = {
         datetime,
         timeout: new Date(datetime.getTime() + test_module.config.timeout),
-        notification,
-        payload,
+        notification: NOTIFICATION,
+        payload: PAYLOAD,
         sender: test_module,
       };
     });
 
     afterEach(() => {
-      global.window = window;
-      global.document = document;
-      global.navigator = navigator;
+      global.window = WINDOW;
+      global.document = DOCUMENT;
+      global.navigator = NAVIGATOR;
     });
 
     it('should render no notifications', () => {

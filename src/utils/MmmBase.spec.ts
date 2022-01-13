@@ -5,25 +5,26 @@ import sinon, { SinonSandbox } from 'sinon';
 
 type BaseTesting = Module.ModuleProperties<MinimumConfig>;
 
+const SCHEMA = z.object({
+  logLevel: z.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
+});
+
+const SANDBOX: SinonSandbox = sinon.createSandbox();
+
 describe('MmmBase', () => {
   let mmm_base: BaseTesting;
 
-  const schema = z.object({
-    logLevel: z.enum(['INFO', 'WARN', 'ERROR', 'DEBUG']).default('ERROR'),
-  });
-  const sandbox: SinonSandbox = sinon.createSandbox();
-
   beforeEach(() => {
-    mmm_base = new MmmBase(schema) as BaseTesting;
+    mmm_base = new MmmBase(SCHEMA) as BaseTesting;
   });
 
   afterEach(() => {
-    sandbox.restore();
+    SANDBOX.restore();
   });
 
   describe('construction', () => {
     it('should create an MmmBase object using the new keyword', () => {
-      mmm_base = new MmmBase(schema) as BaseTesting;
+      mmm_base = new MmmBase(SCHEMA) as BaseTesting;
       expect(mmm_base).to.haveOwnProperty('init').that.is.a('function');
       expect(mmm_base).to.haveOwnProperty('setConfig').that.is.a('function');
       expect(mmm_base).to.haveOwnProperty('start').that.is.a('function');
@@ -42,7 +43,7 @@ describe('MmmBase', () => {
 
     it('should set the provided logger', () => {
       const expected = {} as Module.Logger;
-      mmm_base = new MmmBase(schema, expected) as BaseTesting;
+      mmm_base = new MmmBase(SCHEMA, expected) as BaseTesting;
       mmm_base.init();
       const actual = mmm_base.logger;
       expect(actual).to.equal(expected);
@@ -52,7 +53,7 @@ describe('MmmBase', () => {
   describe('setConfig', () => {
     it('should parse the config successfully', () => {
       mmm_base.init();
-      const stub = sandbox.stub(mmm_base.logger, 'setLogLevel').returns(undefined);
+      const stub = SANDBOX.stub(mmm_base.logger, 'setLogLevel').returns(undefined);
       mmm_base.setConfig({});
       expect(mmm_base).to.haveOwnProperty('has_config_error').that.is.false;
       expect(stub.withArgs('ERROR').callCount).to.equal(1);
@@ -67,7 +68,7 @@ describe('MmmBase', () => {
 
     it('should generate errors with an invalid config', () => {
       mmm_base.init();
-      const stub = sandbox.stub(mmm_base.logger, 'error').returns(undefined);
+      const stub = SANDBOX.stub(mmm_base.logger, 'error').returns(undefined);
       mmm_base.setConfig({ logLevel: 'invalid' });
       expect(mmm_base).to.haveOwnProperty('has_config_error').that.is.true;
       expect(mmm_base).to.haveOwnProperty('config_errors').that.is.an('array').with.length(1);
@@ -78,7 +79,7 @@ describe('MmmBase', () => {
   describe('start', () => {
     it('should call the logger when run', () => {
       mmm_base.init();
-      const stub = sandbox.stub(mmm_base.logger, 'debug').returns(undefined);
+      const stub = SANDBOX.stub(mmm_base.logger, 'debug').returns(undefined);
       mmm_base.start();
       expect(stub.callCount).to.be.at.least(1);
     });
@@ -87,7 +88,7 @@ describe('MmmBase', () => {
   describe('notificationReceived', () => {
     it('should do nothing when called', () => {
       mmm_base.notificationReceived('test', []);
-      expect(true).to.be.true;
+      expect([]).to.be.empty;
     });
   });
 });
