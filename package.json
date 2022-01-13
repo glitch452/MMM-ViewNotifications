@@ -31,7 +31,9 @@
     "lint-f": "eslint '*/**/*.{js,ts}' --report-unused-disable-directives --fix",
     "test": "nyc mocha -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'",
     "test:ci": "nyc mocha --forbid-only --forbid-pending --color -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'",
-    "test:watch": "mocha -w --watch-files src -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'"
+    "test:watch": "mocha -w --watch-files src -r ts-node/register -r tsconfig-paths/register 'src/**/*.spec.ts'",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "dependencies": {
     "jsx-dom-cjs": "^8.0.1-beta.4",
@@ -56,8 +58,9 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "faker": "^5.5.3",
+    "husky": "^7.0.4",
     "jsdom": "^19.0.0",
-    "lint-staged": "^12.1.4",
+    "lint-staged": "^12.1.7",
     "mocha": "^9.1.3",
     "moment": "^2.29.1",
     "nyc": "^15.1.0",
@@ -72,8 +75,8 @@
     "typescript": "^4.5.4"
   },
   "lint-staged": {
-    "*.{json,yaml,yml,md}": "prettier --write",
-    "*.{ts}": "eslint --cache --fix"
+    "*.{json,yaml,yml,css,scss,md}": "prettier --write",
+    "*.ts": "eslint --cache --fix"
   },
   "nyc": {
     "all": true,
@@ -91,7 +94,7 @@
       "src/**/*"
     ],
     "exclude": [
-      "**/*.spec.{js,ts}",
+      "**/*.spec.{js,ts,tsx}",
       "**/__tests__"
     ]
   }
